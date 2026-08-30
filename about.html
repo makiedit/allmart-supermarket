@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ስለ እኛ | Allmart Supermarket</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
+
+        nav { background: #ffffff; padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: #16a34a; text-decoration: none; }
+        .logo span { color: #dc2626; }
+        .nav-links a { margin-left: 15px; text-decoration: none; color: #334155; font-weight: 600; }
+        .nav-links a.active { color: #16a34a; }
+
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .about-card { background: white; padding: 35px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h1 { color: #0f172a; margin-bottom: 20px; text-align: center; font-size: 2rem; }
+        p { margin-bottom: 15px; color: #475569; font-size: 1.05rem; }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .feature-box { background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: center; }
+        .feature-box h3 { color: #16a34a; margin-bottom: 8px; }
+
+        footer { text-align: center; padding: 25px; background: #0f172a; color: #94a3b8; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">ALL<span>MART</span></a>
+            <div class="nav-links">
+                <a href="index.html">ዋና ገፅ</a>
+                <a href="categories.html">የእቃ አይነቶች</a>
+                <a href="about.html" class="active">ስለ እኛ</a>
+                <a href="location.html">መገኛ ቦታ</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="about-card">
+            <h1>ስለ ኦልማርት ሱፐርማርኬት</h1>
+            <p>እንኳን ወደ <strong>Allmart Supermarket</strong> በደህና መጡ! ድርጅታችን ጥራት ያላቸውን የምግብ፣ የኮስሞቲክስ፣ የቤት መገልገያ እና የፅዳት እቃዎችን በተጣጣነ ዋጋ ለደንበኞቹ የሚያቀርብ የንግድ ተቋም ነው።</p>
+            <p>ዓላማችን ደንበኞቻችን የሚፈልጉትን ማንኛውንም እቃ በቤትዎ ወይም በቢሮዎ ሆነው በቀላሉ በኦንላይን አዝዘው ያሉበት ድረስ በፍጥነት እንዲደርሳቸው ማድረግ ነው።</p>
+
+            <div class="features">
+                <div class="feature-box">
+                    <h3>🏆 ተረጋገጠ ጥራት</h3>
+                    <p>100% አስተማማኝ እና ጥራት ያላቸው ምርቶች</p>
+                </div>
+                <div class="feature-box">
+                    <h3>🚀 ፈጣን ማድረስ</h3>
+                    <p>ያዘዙትን እቃ ባሉበት ቦታ በፍጥነት እናደርሳለን</p>
+                </div>
+                <div class="feature-box">
+                    <h3>💳 ቀላል ክፍያ</h3>
+                    <p>በቴሌብር ወይም በባንክ ሂሳብ ክፍያ መፈጸም ይቻላል</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Allmart Supermarket. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
