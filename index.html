@@ -66,8 +66,29 @@
 
         /* Footer */
         footer { text-align: center; padding: 30px; background: #0f172a; color: #94a3b8; margin-top: 60px; }
-        footer strong { color: #fff; }
+        footer strong { color: #fff; 
+               /* በስልክ ስክሪን ላይ ዋና ዋና ክፍሎችን ብቻ አስተካክል */
+@media (max-width: 600px) {
+    /* የካርዶቹን ብዛት በስልክ ላይ በሁለት ረድፍ ያድርግ */
+    .grid { 
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; 
+        gap: 12px !important; 
+    }
+    
+    /* የምድብ አዝራሮችን በጎን በጣት እየገፉ ለመምረጥ እንዲመቹ ያድርግ */
+    .category-scroll { 
+        display: flex !important; 
+        overflow-x: auto !important; 
+        white-space: nowrap !important; 
+        padding-bottom: 8px !important; 
+    }
+    
+    /* የጽሁፍ መጠኖችን በስልክ ልክ ያንሳቸው */
+    .hero h1 { font-size: 1.6rem !important; }
+    .card-title { font-size: 0.9rem !important; }
+}         
     </style>
+   
 </head>
 <body>
 
