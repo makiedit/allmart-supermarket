@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maki Online Store | ዘመናዊ የዕቃ መሸጫ</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; line-height: 1.6; }
+
+        /* Navigation Bar */
+        nav { background: #0f172a; padding: 15px 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: #00fff0; font-size: 1.4rem; font-weight: bold; text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #00fff0; }
+
+        /* Hero Header */
+        header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 50px 20px; text-align: center; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; color: #00fff0; }
+
+        /* Search & Filter Controls */
+        .controls { max-width: 1000px; margin: -25px auto 20px auto; background: #fff; padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+        .search-box { flex: 1; min-width: 200px; }
+        .search-box input { width: 100%; padding: 10px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; }
+        .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; border: none; background: #e0e0e0; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .filter-btn.active, .filter-btn:hover { background: #0088cc; color: white; }
+
+        /* Container & Grid */
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+
+        /* Product Card */
+        .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 220px; object-fit: cover; cursor: pointer; }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-category { font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 5px; }
+        .card-title { font-size: 1.2rem; margin-bottom: 10px; color: #1a1a2e; }
+        .price { font-size: 1.3rem; font-weight: bold; color: #e94560; margin-bottom: 15px; }
+
+        /* Buttons */
+        .btn-order { display: block; width: 100%; background: #0088cc; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
+        .btn-order:hover { background: #006699; }
+
+        /* About & Contact Sections */
+        .section-box { background: #fff; padding: 30px; border-radius: 12px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .section-title { font-size: 1.6rem; color: #1a1a2e; margin-bottom: 15px; border-bottom: 3px solid #0088cc; display: inline-block; padding-bottom: 5px; }
+        
+        .contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .contact-item { background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #0088cc; }
+        .contact-item h4 { color: #1a1a2e; margin-bottom: 5px; }
+
+        /* Footer */
+        footer { text-align: center; padding: 25px; background: #0f172a; color: #fff; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">Maki Store</a>
+            <ul class="nav-links">
+                <li><a href="#products">ምርቶች</a></li>
+                <li><a href="#about">ስለ እኛ</a></li>
+                <li><a href="#contact">አድራሻ</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <h1>Maki Online Shop</h1>
+        <p>ጥራት ያላቸውን ምርቶች ባሉበት ሆነው በፍጥነት ያዙ!</p>
+    </header>
+
+    <!-- Search & Filter Controls -->
+    <div class="controls" id="products">
+        <div class="search-box">
+            <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="ዕቃ በስም ፈልግ...">
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterCategory('all', this)">ሁሉንም</button>
+            <button class="filter-btn" onclick="filterCategory('electronics', this)">ኤሌክትሮኒክስ</button>
+            <button class="filter-btn" onclick="filterCategory('home', this)">የቤት እቃዎች</button>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="container">
+        <div class="grid" id="productGrid">
+            <!-- Product 1 -->
+            <div class="card" data-category="electronics" data-name="ስማርት ሰዓት smart watch">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" alt="Smart Watch">
+                <div class="card-content">
+                    <div>
+                        <div class="card-category">ኤሌክትሮኒክስ</div>
+                        <h3 class="card-title">ስማርት ሰዓት (Smart Watch)</h3>
+                        <div class="price">3,200 ብር</div>
+                    </div>
+                    <a href="https://t.me/yourusername?text=ሰላም%20ስማርት%20ሰዓቱን%20ማዘዝ%20እፈልጋለሁ" target="_blank" class="btn-order">በ Telegram እዘዝ</a>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="card" data-category="electronics" data-name="የገመድ አልባ ኤርፎን airpods">
+                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500" alt="Airpods">
+                <div class="card-content">
+                    <div>
+                        <div class="card-category">ኤሌክትሮኒክስ</div>
+                        <h3 class="card-title">የገመድ አልባ ኤርፎን (Airpods)</h3>
+                        <div class="price">1,800 ብር</div>
+                    </div>
+                    <a href="https://t.me/yourusername?text=ሰላም%20Airpods%20ማዘዝ%20እፈልጋለሁ" target="_blank" class="btn-order">በ Telegram እዘዝ</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us Section -->
+        <div class="section-box" id="about">
+            <h2 class="section-title">ስለ እኛ (About Us)</h2>
+            <p>Maki Online Store ጥራት ያላቸውን የኤሌክትሮኒክስ፣ የቤት ውስጥ እና የተለያዩ አዳዲስ እቃዎችን በተጣጣመ ዋጋ ለደንበኞች የሚያቀርብ ኦንላይን ሱቅ ነው። የምታዟቸውን እቃዎች ባላችሁበት ቦታ በፍጥነት እናደርሳለን።</p>
+        </div>
+
+        <!-- Contact Us Section -->
+        <div class="section-box" id="contact">
+            <h2 class="section-title">አድራሻ እና ግንኙነት (Contact Us)</h2>
+            <p>እቃዎችን ለማዘዝ ወይም ለተጨማሪ ጥያቄዎች በሚከተሉት አድራሻዎቻችን ማግኘት ትችላላችሁ፦</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>📞 ስልክ ቁጥር</h4>
+                    <p>+251 900 000 000</p>
+                </div>
+                <div class="contact-item">
+                    <h4>💬 ቴሌግራም</h4>
+                    <p><a href="https://t.me/yourusername" target="_blank" style="color:#0088cc; font-weight:bold;">@yourusername</a></p>
+                </div>
+                <div class="contact-item">
+                    <h4>📍 ቦታ</h4>
+                    <p>አዲስ አበባ፣ ኢትዮጵያ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Maki Online Shop. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function filterProducts() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+            for (let card of cards) {
+                let name = card.getAttribute('data-name').toLowerCase();
+                card.style.display = name.includes(input) ? "flex" : "none";
+            }
+        }
+
+        function filterCategory(category, element) {
+            let cards = document.getElementsByClassName('card');
+            let buttons = document.getElementsByClassName('filter-btn');
+            for (let btn of buttons) { btn.classList.remove('active'); }
+            element.classList.add('active');
+
+            for (let card of cards) {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
