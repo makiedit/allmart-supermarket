@@ -136,8 +136,8 @@
 
     <!-- Products Container -->
     <div class="container">
-        <div class="grid" id="productGrid"></div>
-
+    <div class="grid" id="productGrid"></div>
+</div>
         <!-- Branches Section -->
         <div class="info-section" id="branches">
             <h2 class="section-title">የ Allmart Supermarket ቅርንጫፎች</h2>
@@ -168,98 +168,132 @@
     </div>
 
     <!-- Footer -->
+    <!-- የትዕዛዝ እና የክፍያ መስኮት -->
+<div class="modal" id="orderModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        
+        <form id="orderForm" onsubmit="goToPayment(event)">
+            <h3>ትዕዛዝዎን ያረጋግጡ</h3>
+            <div class="form-group">
+                <label>የመረጡት እቃ</label>
+                <input type="text" id="modalProductName" readonly style="background: #e2e8f0;">
+            </div>
+            <div class="form-group">
+                <label>ብዛት (Quantity)</label>
+                <input type="number" id="modalQuantity" value="1" min="1" required onchange="updateTotalPrice()">
+            </div>
+            <div class="form-group">
+                <label>ሙሉ ስም</label>
+                <input type="text" id="custName" placeholder="ስምዎን ያስገቡ" required>
+            </div>
+            <div class="form-group">
+                <label>ስልክ ቁጥር</label>
+                <input type="tel" id="custPhone" placeholder="09... ወይም 07..." required>
+            </div>
+            <div class="form-group">
+                <label>የማድረሻ አድራሻ</label>
+                <textarea id="custAddress" rows="2" placeholder="ክፍለ ከተማ፣ ወረዳ ወይም የቦታው ልዩ ስም" required></textarea>
+            </div>
+            <div style="font-weight: bold; margin-bottom: 15px; color: #dc2626;" id="totalPriceText">
+                ጠቅላላ ዋጋ፦ 0 ብር
+            </div>
+            <button type="submit" class="btn-submit">ወደ ክፍያ ቀጥል ➔</button>
+        </form>
+
+        <div class="payment-box" id="paymentBox">
+            <h3>✅ ትዕዛዝዎ ተመዝግቧል!</h3>
+            <p>እባክዎን ክፍያውን በታች በተጠቀሱት የክፍያ አማራጮች ይፈጽሙ፦</p>
+            <div class="bank-details">
+                <p><strong>Telebirr:</strong> 0911000000 (Allmart)</p>
+                <p><strong>ንግድ ባንክ (CBE):</strong> 100000000000</p>
+                <p><strong>የተከፋይ መጠን፦</strong> <span id="payAmount" style="color: #dc2626; font-weight: bold;"></span></p>
+            </div>
+            <button class="btn-order" onclick="closeModal()">ጨርሻለሁ</button>
+        </div>
+    </div>
+</div>
     <footer>
         <p>&copy; 2026 <strong>Allmart Supermarket Ethiopia</strong>. All rights reserved.</p>
     </footer>
 
     <!-- JavaScript Data & Logic -->
-    <script>
-        const telegramUsername = "allmart_ethiopia";
+   <script>
+    const products = [
+        { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: 1400, img: 'food1.png' },
+        { id: 2, category: 'food', name: 'ኦርጋኒክ ማር 1KG', price: 850, img: 'foood4.png' },
+        { id: 3, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: 950, img: 'foood3.png' },
+        { id: 4, category: 'appliances', name: 'Hand Blender', price: 3500, img: '' }
+    ];
 
-        // የ Allmart እቃዎች ዝርዝር
-        const products = [
-            // ምግቦች (Food)
-            { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: '1,400 ብር', badge: 'ትኩስ', img: 'food1.png' },
-            { id: 2, category: 'food', name: 'የሀገር ውስጥ ምርጥ ኦርጋኒክ ማር 1KG', price: '850 ብር', badge: '', img: 'foood4.png' },
-            { id: 3, category: 'food', name: 'የጣልያን ፓስታ (Italian Pasta)', price: '180 ብር', badge: '', img: 'food2.png' },
+    let selectedProduct = null;
+    let selectedCategory = 'all';
 
-            // ኮስሞቲክስ (Cosmetics)
-            { id: 4, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: '950 ብር', badge: 'ቅናሽ', img: 'foood3.png' },
-            { id: 5, category: 'cosmetics', name: 'የፊት ማፅጃ (CeraVe Facial Cleanser)', price: '2,200 ብር', badge: 'በጣም የተወደደ', img: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500' },
+    function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        grid.innerHTML = '';
 
-            // የቤት መገልገያ (Appliances)
-            { id: 6, category: 'appliances', name: 'የእጅ ኤሌክትሪክ ብሌንደር (Hand Blender)', price: '3,500 ብር', badge: '', img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' },
-            { id: 7, category: 'appliances', name: 'የቡና ማፍያ ማሽን (Espresso Coffee Maker)', price: '14,500 ብር', badge: 'አዲስ', img: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=500' },
+        const filtered = products.filter(item => {
+            return (selectedCategory === 'all' || item.category === selectedCategory) &&
+                   item.name.toLowerCase().includes(searchInput);
+        });
 
-            // የስጦታ እቃዎች (Gifts)
-            { id: 8, category: 'gifts', name: 'የሽቶ እና የሳሙና Gift Box Set', price: '4,800 ብር', badge: 'ለስጦታ የሚሆን', img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500' },
-
-            // የህፃናት መጫወቻ (Toys)
-            { id: 9, category: 'toys', name: 'በሪሞት የምትሰራ የልጆች መኪና', price: '3,800 ብር', badge: '', img: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500' },
-            { id: 10, category: 'toys', name: 'የህፃናት ሌጎ (Lego Building Blocks)', price: '2,400 ብር', badge: '', img: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=500' }
-        ];
-
-        let selectedCategory = 'all';
-
-        function renderProducts() {
-            const grid = document.getElementById('productGrid');
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            grid.innerHTML = '';
-
-            const filtered = products.filter(item => {
-                const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-                const matchesSearch = item.name.toLowerCase().includes(searchInput);
-                return matchesCategory && matchesSearch;
-            });
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 1.2rem; color: #64748b; padding: 40px 0;">ምንም አይነት እቃ አልተገኘም። እባክዎን ሌላ ስም ይፈልጉ!</p>`;
-                return;
-            }
-
-            filtered.forEach(item => {
-                const telegramLink = `https://t.me/${telegramUsername}?text=${encodeURIComponent('ሰላም Allmart! ' + item.name + ' ማዘዝ እፈልጋለሁ')}`;
-                const badgeHTML = item.badge ? `<span class="badge">${item.badge}</span>` : '';
-
-                grid.innerHTML += `
-                    <div class="card">
-                        <div class="card-img-container">
-                            <img src="${item.img}" alt="${item.name}">
-                            ${badgeHTML}
+        filtered.forEach(item => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="card-content">
+                        <div>
+                            <h3 class="card-title">${item.name}</h3>
+                            <div class="price">${item.price.toLocaleString()} ብር</div>
                         </div>
-                        <div class="card-content">
-                            <div>
-                                <div class="card-category">${getCategoryName(item.category)}</div>
-                                <h3 class="card-title">${item.name}</h3>
-                                <div class="price">${item.price}</div>
-                            </div>
-                            <a href="${telegramLink}" target="_blank" class="btn-order">በ Telegram እዘዝ</a>
-                        </div>
+                        <button class="btn-order" onclick="openOrderModal(${item.id})">እዘዝ</button>
                     </div>
-                `;
-            });
-        }
+                </div>
+            `;
+        });
+    }
 
-        function getCategoryName(cat) {
-            switch(cat) {
-                case 'food': return 'ምግብ እና መጠጥ';
-                case 'cosmetics': return 'ኮስሞቲክስ';
-                case 'appliances': return 'የቤት መገልገያ';
-                case 'gifts': return 'የስጦታ እቃ';
-                case 'toys': return 'የህፃናት መጫወቻ';
-                default: return 'Allmart';
-            }
-        }
+    function openOrderModal(id) {
+        selectedProduct = products.find(p => p.id === id);
+        document.getElementById('modalProductName').value = selectedProduct.name;
+        document.getElementById('modalQuantity').value = 1;
+        document.getElementById('orderForm').style.display = 'block';
+        document.getElementById('paymentBox').style.display = 'none';
+        updateTotalPrice();
+        document.getElementById('orderModal').style.display = 'flex';
+    }
 
-        function filterCategory(cat, element) {
-            selectedCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            renderProducts();
-        }
+    function updateTotalPrice() {
+        const qty = document.getElementById('modalQuantity').value;
+        const total = selectedProduct.price * qty;
+        document.getElementById('totalPriceText').innerText = `ጠቅላላ ዋጋ፦ ${total.toLocaleString()} ብር`;
+    }
 
+    function goToPayment(event) {
+        event.preventDefault();
+        const qty = document.getElementById('modalQuantity').value;
+        const total = selectedProduct.price * qty;
+        
+        document.getElementById('payAmount').innerText = `${total.toLocaleString()} ብር`;
+        document.getElementById('orderForm').style.display = 'none';
+        document.getElementById('paymentBox').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('orderModal').style.display = 'none';
+    }
+
+    function filterCategory(cat, element) {
+        selectedCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
         renderProducts();
-    </script>
+    }
+
+    renderProducts();
+</script>
 </body>
 </html>
        
