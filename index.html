@@ -4,42 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Allmart Supermarket | ኦልማርት ሱፐርማርኬት</title>
-    
-     /* Hero Banner Style */
-.hero {
-    background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)), 
-                url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200') center/cover no-repeat;
-    height: 320px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 0 0 16px 16px;
-}
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
 
-.hero h1 {
-    font-size: 2.8rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-}
+        /* Top Bar & Navigation */
+        .top-bar { background: #0f172a; color: #fff; padding: 8px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
+        nav { background: #ffffff; padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: #16a34a; text-decoration: none; }
+        .logo span { color: #dc2626; }
 
-.hero p {
-    font-size: 1.2rem;
-    color: #e2e8f0;
-    max-width: 600px;
-}
+        /* Hero Banner (በትልቁ የሚታየው የሱፐርማርኬት ፎቶና ስም) */
+        .hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)), 
+                        url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200') center/cover no-repeat;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 8px; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+        .hero p { font-size: 1.1rem; color: #e2e8f0; max-width: 600px; }
 
-@media (max-width: 600px) {
-    .hero { height: 220px; }
-    .hero h1 { font-size: 1.8rem; }
-    .hero p { font-size: 0.95rem; }
-} 
-    
+        /* Controls & Product Grid */
+        .controls { max-width: 1200px; margin: 10px auto; padding: 0 15px; }
+        .search-box input { width: 100%; max-width: 600px; display: block; margin: 0 auto 15px auto; padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 30px; font-size: 0.95rem; outline: none; }
+        .category-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+        .cat-btn { padding: 8px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 20px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .cat-btn.active { background: #16a34a; color: white; border-color: #16a34a; }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+        /* Cards */
+        .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #f1f5f9; }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .price { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+        .btn-order { width: 100%; background: #16a34a; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .btn-order:hover { background: #15803d; }
+
+        /* Mobile Responsiveness (የስልክ ማስተካከያ) */
+        @media (max-width: 600px) {
+            .hero { height: 200px; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { font-size: 0.9rem; }
+            .grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; gap: 12px !important; }
+            .category-scroll { display: flex !important; overflow-x: auto !important; white-space: nowrap !important; padding-bottom: 8px !important; }
+            .card-title { font-size: 0.9rem !important; }
+        }
+
+        footer { text-align: center; padding: 25px; background: #0f172a; color: #94a3b8; margin-top: 40px; }
+    </style>
 </head>
 <body>
 
@@ -53,6 +76,12 @@
             <a href="index.html" class="logo">ALL<span>MART</span></a>
         </div>
     </nav>
+
+    <!-- የሱፐርማርኬቱ በትልቁ የሚታይ ባነር -->
+    <header class="hero">
+        <h1>ALLMART SUPERMARKET</h1>
+        <p>የሚፈልጉትን ማንኛውንም የቤት ውስጥ ምርቶች በጥራት እና በቅናሽ ዋጋ እዚህ ያገኛሉ!</p>
+    </header>
 
     <div class="controls">
         <div class="search-box">
@@ -71,58 +100,58 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Allmart Supermarket Ethiopia. All rights reserved.</p>
+        <p>&copy; Allmart Supermarket Ethiopia. All rights reserved.</p>
     </footer>
 
-   <script>
-    const products = [
-        { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: 1400, img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=500' },
-        { id: 2, category: 'food', name: 'ኦርጋኒክ ማር 1KG', price: 850, img: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500' },
-        { id: 3, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: 950, img: 'https://images.unsplash.com/photo-1608248597309-8d76e736a3e1?w=500' },
-        { id: 4, category: 'appliances', name: 'Hand Blender', price: 3500, img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' }
-    ];
+    <script>
+        const products = [
+            { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: 1400, img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=500' },
+            { id: 2, category: 'food', name: 'ኦርጋኒክ ማር 1KG', price: 850, img: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500' },
+            { id: 3, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: 950, img: 'https://images.unsplash.com/photo-1608248597309-8d76e736a3e1?w=500' },
+            { id: 4, category: 'appliances', name: 'Hand Blender', price: 3500, img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' }
+        ];
 
-    let selectedCategory = 'all';
+        let selectedCategory = 'all';
 
-    function renderProducts() {
-        const grid = document.getElementById('productGrid');
-        const searchInput = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
-        grid.innerHTML = '';
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            grid.innerHTML = '';
 
-        const filtered = products.filter(item => {
-            return (selectedCategory === 'all' || item.category === selectedCategory) &&
-                   item.name.toLowerCase().includes(searchInput);
-        });
+            const filtered = products.filter(item => {
+                return (selectedCategory === 'all' || item.category === selectedCategory) &&
+                       item.name.toLowerCase().includes(searchInput);
+            });
 
-        filtered.forEach(item => {
-            grid.innerHTML += `
-                <div class="card">
-                    <img src="${item.img}" alt="${item.name}">
-                    <div class="card-content">
-                        <div>
-                            <h3 class="card-title">${item.name}</h3>
-                            <div class="price">${item.price.toLocaleString()} ብር</div>
+            filtered.forEach(item => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="card-content">
+                            <div>
+                                <h3 class="card-title">${item.name}</h3>
+                                <div class="price">${item.price.toLocaleString()} ብር</div>
+                            </div>
+                            <button class="btn-order" onclick="goToCheckout('${item.name}', ${item.price})">እዘዝ</button>
                         </div>
-                        <button class="btn-order" onclick="goToCheckout('${item.name}', ${item.price})">እዘዝ</button>
                     </div>
-                </div>
-            `;
-        });
-    }
+                `;
+            });
+        }
 
-    // አዲሱን order.html ፋይል ለመጥራት የተቀየረ function
-    function goToCheckout(name, price) {
-        window.location.href = `order.html?name=${encodeURIComponent(name)}&price=${price}`;
-    }
+        // ወደ order.html የሚወስድ ሊንክ
+        function goToCheckout(name, price) {
+            window.location.href = `order.html?name=${encodeURIComponent(name)}&price=${price}`;
+        }
 
-    function filterCategory(cat, element) {
-        selectedCategory = cat;
-        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
+        function filterCategory(cat, element) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            renderProducts();
+        }
+
         renderProducts();
-    }
-
-    renderProducts();
-</script>
+    </script>
 </body>
 </html>
