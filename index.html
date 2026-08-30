@@ -3,99 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maki Online Store | ዘመናዊ የዕቃ መሸጫ</title>
+    <title>Allmart Supermarket | ኦልማርት ሱፐርማርኬት</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; line-height: 1.6; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
 
-        /* Nav Bar */
-        nav { background: #0f172a; padding: 15px 20px; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { color: #00fff0; font-size: 1.4rem; font-weight: bold; text-decoration: none; }
+        /* Top Bar */
+        .top-bar { background: #0f172a; color: #fff; padding: 8px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; }
+        .top-bar a { color: #38bdf8; text-decoration: none; font-weight: bold; }
 
-        /* Header */
-        header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 40px 20px; text-align: center; }
-        header h1 { font-size: 2.2rem; margin-bottom: 8px; color: #00fff0; }
+        /* Navigation */
+        nav { background: #ffffff; padding: 15px 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: #16a34a; text-decoration: none; }
+        .logo span { color: #dc2626; }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { color: #334155; text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        .nav-links a:hover { color: #16a34a; }
 
-        /* Filter & Search Bar */
-        .controls { max-width: 1000px; margin: -25px auto 20px auto; background: #fff; padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
-        .search-box { flex: 1; min-width: 200px; }
-        .search-box input { width: 100%; padding: 10px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; }
-        .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .filter-btn { padding: 8px 16px; border: none; background: #e0e0e0; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .filter-btn.active, .filter-btn:hover { background: #0088cc; color: white; }
+        /* Hero Banner */
+        .hero { background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200'); background-size: cover; background-position: center; color: white; padding: 80px 20px; text-align: center; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .hero p { font-size: 1.2rem; margin-bottom: 25px; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .btn-main { background: #16a34a; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: background 0.3s; }
+        .btn-main:hover { background: #15803d; }
 
-        /* Grid Section */
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        /* Search & Categories Bar */
+        .controls { max-width: 1200px; margin: 30px auto 10px auto; padding: 0 20px; }
+        .search-box { width: 100%; max-width: 600px; margin: 0 auto 20px auto; }
+        .search-box input { width: 100%; padding: 14px 20px; border: 2px solid #e2e8f0; border-radius: 30px; font-size: 1rem; outline: none; transition: border 0.3s; }
+        .search-box input:focus { border-color: #16a34a; }
 
-        /* Card Layout */
-        .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { transform: translateY(-5px); }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-category { font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 5px; }
-        .card-title { font-size: 1.1rem; margin-bottom: 8px; color: #1a1a2e; }
-        .price { font-size: 1.2rem; font-weight: bold; color: #e94560; margin-bottom: 12px; }
+        .category-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; justify-content: center; flex-wrap: wrap; }
+        .cat-btn { padding: 10px 20px; border: none; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 25px; cursor: pointer; font-weight: 600; color: #475569; transition: 0.3s; }
+        .cat-btn.active, .cat-btn:hover { background: #16a34a; color: white; border-color: #16a34a; }
 
-        .btn-order { display: block; width: 100%; background: #0088cc; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; }
-        .btn-order:hover { background: #006699; }
+        /* Container & Grid */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
 
-        footer { text-align: center; padding: 20px; background: #0f172a; color: #fff; margin-top: 50px; }
+        /* Product Cards */
+        .card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #f1f5f9; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card-img-container { position: relative; width: 100%; height: 200px; overflow: hidden; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .badge { position: absolute; top: 10px; left: 10px; background: #dc2626; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .card-content { padding: 18px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-category { font-size: 0.75rem; text-transform: uppercase; color: #16a34a; font-weight: 700; margin-bottom: 5px; }
+        .card-title { font-size: 1.1rem; margin-bottom: 8px; color: #0f172a; font-weight: 600; }
+        .price { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+
+        .btn-order { display: block; width: 100%; background: #25d366; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: background 0.3s; }
+        .btn-order:hover { background: #1eb857; }
+
+        /* Info Sections */
+        .info-section { background: #ffffff; padding: 40px 30px; border-radius: 16px; margin-top: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .section-title { font-size: 1.8rem; color: #0f172a; margin-bottom: 15px; position: relative; }
+        .section-title::after { content: ''; display: block; width: 60px; height: 4px; background: #16a34a; margin-top: 8px; border-radius: 2px; }
+
+        .branches-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
+        .branch-card { background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 5px solid #16a34a; }
+
+        /* Footer */
+        footer { text-align: center; padding: 30px; background: #0f172a; color: #94a3b8; margin-top: 60px; }
+        footer strong { color: #fff; }
     </style>
 </head>
 <body>
 
+    <!-- Top Info Bar -->
+    <div class="top-bar">
+        <div>📍 አዲስ አበባ | ቦሌ • ካዛንቺስ • ሳርቤት • መገናኛ</div>
+        <div>📞 ደውለው ለማዘዝ፦ <a href="tel:+251911000000">+251 911 000 000</a></div>
+    </div>
+
+    <!-- Main Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="#" class="logo">Maki Store</a>
+            <a href="#" class="logo">ALL<span>MART</span></a>
+            <ul class="nav-links">
+                <li><a href="#products">ምርቶች</a></li>
+                <li><a href="#branches">ቅርንጫፎች</a></li>
+                <li><a href="#about">ስለ ኦልማርት</a></li>
+                <li><a href="#contact">አድራሻ</a></li>
+            </ul>
         </div>
     </nav>
 
-    <header>
-        <h1>Maki Online Shop</h1>
-        <p>ጥራት ያላቸውን የቤት እቃዎች እና ኤሌክትሮኒክስ ያግኙ!</p>
-    </header>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>እንኳን ወደ ALLMART Supermarket በደህና መጡ!</h1>
+        <p>የቤት ውስጥና የውጪ የምግብ አይነቶች፣ የቤት መገልገያዎች፣ ኮስሞቲክስ እና የህፃናት መጫወቻዎችን ባሉበት ሆነው ይዘዙ!</p>
+        <a href="#products" class="btn-main">ምርቶችን ይመልከቱ</a>
+    </div>
 
-    <div class="controls">
+    <!-- Search & Filter Controls -->
+    <div class="controls" id="products">
         <div class="search-box">
-            <input type="text" id="searchInput" onkeyup="renderProducts()" placeholder="ዕቃ በስም ፈልግ...">
+            <input type="text" id="searchInput" onkeyup="renderProducts()" placeholder="የሚፈልጉትን እቃ በስም ይፈልጉ (ምሳሌ፦ ወተት፣ ሻምፖ፣ መጫወቻ...)...">
         </div>
-        <div class="filter-buttons">
-            <button class="filter-btn active" onclick="filterCategory('all', this)">ሁሉንም</button>
-            <button class="filter-btn" onclick="filterCategory('electronics', this)">ኤሌክትሮኒክስ</button>
-            <button class="filter-btn" onclick="filterCategory('home', this)">የቤት እቃዎች</button>
+
+        <div class="category-scroll">
+            <button class="cat-btn active" onclick="filterCategory('all', this)">ሁሉንም</button>
+            <button class="cat-btn" onclick="filterCategory('food', this)">የሀገር ውስጥና የውጪ ምግቦች</button>
+            <button class="cat-btn" onclick="filterCategory('cosmetics', this)">ኮስሞቲክስ (Cosmetics)</button>
+            <button class="cat-btn" onclick="filterCategory('appliances', this)">የቤት መገልገያ ማሽኖች</button>
+            <button class="cat-btn" onclick="filterCategory('gifts', this)">የስጦታ እቃዎች</button>
+            <button class="cat-btn" onclick="filterCategory('toys', this)">የህፃናት መጫወቻ</button>
         </div>
     </div>
 
+    <!-- Products Container -->
     <div class="container">
         <div class="grid" id="productGrid"></div>
+
+        <!-- Branches Section -->
+        <div class="info-section" id="branches">
+            <h2 class="section-title">የ Allmart Supermarket ቅርንጫፎች</h2>
+            <div class="branches-grid">
+                <div class="branch-card">
+                    <h3>📍 ቦሌ ቅርንጫፍ</h3>
+                    <p>ከቦሌ መድኃኔዓለም አቅራቢያ</p>
+                    <p>🕒 ከጠዋቱ 2:00 - ማታ 4:00</p>
+                </div>
+                <div class="branch-card">
+                    <h3>📍 ካዛንቺስ ቅርንጫፍ</h3>
+                    <p>ኢንተርኮንቲነንታል ሆቴል ፊት ለፊት</p>
+                    <p>🕒 ከጠዋቱ 2:00 - ማታ 4:00</p>
+                </div>
+                <div class="branch-card">
+                    <h3>📍 ሳርቤት ቅርንጫፍ</h3>
+                    <p>ከካናዳ ኤምባሲ ጎን</p>
+                    <p>🕒 ከጠዋቱ 2:00 - ማታ 4:00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="info-section" id="about">
+            <h2 class="section-title">ስለ Allmart Supermarket</h2>
+            <p>ኦልማርት ሱፐርማርኬት ጥራት ያላቸውን የሀገር ውስጥ እና ከውጭ ሀገር የሚገቡ የምግብ፣ የውበት፣ የቤት ውስጥ እና የህፃናት ምርቶችን በተመጣጣኝ ዋጋ ለአጠቃቀም በሚመች መልኩ ያቀርባል። ለደንበኞቻችን አስተማማኝ እና ፈጣን አገልግሎት ለመስጠት ሁልጊዜ ዝግጁ ነን።</p>
+        </div>
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Maki Online Shop. All rights reserved.</p>
+        <p>&copy; 2026 <strong>Allmart Supermarket Ethiopia</strong>. All rights reserved.</p>
     </footer>
 
+    <!-- JavaScript Data & Logic -->
     <script>
-        // የቴሌግራም አድራሻህን እዚህ ጋር ቀይረው
-        const telegramUsername = "yourusername";
+        const telegramUsername = "allmart_ethiopia";
 
-        // ሁሉም እቃዎች የሚመዘገቡበት ዝርዝር (Array)
+        // የ Allmart እቃዎች ዝርዝር
         const products = [
-            // ኤሌክትሮኒክስ (Electronics)
-            { id: 1, category: 'electronics', name: 'ስማርት ሰዓት (Smart Watch)', price: '3,200 ብር', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500' },
-            { id: 2, category: 'electronics', name: 'የገመድ አልባ ኤርፎን (Airpods)', price: '1,800 ብር', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500' },
-            { id: 3, category: 'electronics', name: 'ብሉቱዝ ስፒከር (Bluetooth Speaker)', price: '2,800 ብር', img: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500' },
-            { id: 4, category: 'electronics', name: 'ፓወር ባንክ 20000mAh (Power Bank)', price: '2,200 ብር', img: 'https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500' },
-            { id: 5, category: 'electronics', name: 'ስማርት ቲቪ 43 ኢንች (Smart TV)', price: '38,000 ብር', img: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500' },
+            // ምግቦች (Food)
+            { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: '1,400 ብር', badge: 'ትኩስ', img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=500' },
+            { id: 2, category: 'food', name: 'የሀገር ውስጥ ምርጥ ኦርጋኒክ ማር 1KG', price: '850 ብር', badge: '', img: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500' },
+            { id: 3, category: 'food', name: 'የጣልያን ፓስታ (Italian Pasta)', price: '180 ብር', badge: '', img: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281288?w=500' },
 
-            // የቤት እቃዎች (Home Appliances)
-            { id: 6, category: 'home', name: 'ዘመናዊ የክትፎ/የምግብ እቃ Set', price: '2,500 ብር', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500' },
-            { id: 7, category: 'home', name: 'የቡና ማፍያ ማሽን (Coffee Maker)', price: '4,500 ብር', img: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=500' },
-            { id: 8, category: 'home', name: 'ብሌንደር/ፈጫጭ (Electric Blender)', price: '3,600 ብር', img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' },
-            { id: 9, category: 'home', name: 'ኤሌክትሪክ ፍሪጅ (Refrigerator)', price: '45,000 ብር', img: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=500' },
-            { id: 10, category: 'home', name: 'የልብስ ማጠቢያ ማሽን (Washing Machine)', price: '52,000 ብር', img: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=500' },
-            { id: 11, category: 'home', name: 'የማይክሮዌቭ ኦቨን (Microwave Oven)', price: '12,500 ብር', img: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=500' }
+            // ኮስሞቲክስ (Cosmetics)
+            { id: 4, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: '950 ብር', badge: 'ቅናሽ', img: 'https://images.unsplash.com/photo-1608248597309-8d76e736a3e1?w=500' },
+            { id: 5, category: 'cosmetics', name: 'የፊት ማፅጃ (CeraVe Facial Cleanser)', price: '2,200 ብር', badge: 'በጣም የተወደደ', img: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500' },
+
+            // የቤት መገልገያ (Appliances)
+            { id: 6, category: 'appliances', name: 'የእጅ ኤሌክትሪክ ብሌንደር (Hand Blender)', price: '3,500 ብር', badge: '', img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' },
+            { id: 7, category: 'appliances', name: 'የቡና ማፍያ ማሽን (Espresso Coffee Maker)', price: '14,500 ብር', badge: 'አዲስ', img: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=500' },
+
+            // የስጦታ እቃዎች (Gifts)
+            { id: 8, category: 'gifts', name: 'የሽቶ እና የሳሙና Gift Box Set', price: '4,800 ብር', badge: 'ለስጦታ የሚሆን', img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500' },
+
+            // የህፃናት መጫወቻ (Toys)
+            { id: 9, category: 'toys', name: 'በሪሞት የምትሰራ የልጆች መኪና', price: '3,800 ብር', badge: '', img: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500' },
+            { id: 10, category: 'toys', name: 'የህፃናት ሌጎ (Lego Building Blocks)', price: '2,400 ብር', badge: '', img: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=500' }
         ];
 
         let selectedCategory = 'all';
@@ -111,16 +191,24 @@
                 return matchesCategory && matchesSearch;
             });
 
+            if(filtered.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 1.2rem; color: #64748b; padding: 40px 0;">ምንም አይነት እቃ አልተገኘም። እባክዎን ሌላ ስም ይፈልጉ!</p>`;
+                return;
+            }
+
             filtered.forEach(item => {
-                const catName = item.category === 'electronics' ? 'ኤሌክትሮኒክስ' : 'የቤት እቃዎች';
-                const telegramLink = `https://t.me/${telegramUsername}?text=${encodeURIComponent('ሰላም ' + item.name + ' ማዘዝ እፈልጋለሁ')}`;
-                
+                const telegramLink = `https://t.me/${telegramUsername}?text=${encodeURIComponent('ሰላም Allmart! ' + item.name + ' ማዘዝ እፈልጋለሁ')}`;
+                const badgeHTML = item.badge ? `<span class="badge">${item.badge}</span>` : '';
+
                 grid.innerHTML += `
                     <div class="card">
-                        <img src="${item.img}" alt="${item.name}">
+                        <div class="card-img-container">
+                            <img src="${item.img}" alt="${item.name}">
+                            ${badgeHTML}
+                        </div>
                         <div class="card-content">
                             <div>
-                                <div class="card-category">${catName}</div>
+                                <div class="card-category">${getCategoryName(item.category)}</div>
                                 <h3 class="card-title">${item.name}</h3>
                                 <div class="price">${item.price}</div>
                             </div>
@@ -131,15 +219,26 @@
             });
         }
 
+        function getCategoryName(cat) {
+            switch(cat) {
+                case 'food': return 'ምግብ እና መጠጥ';
+                case 'cosmetics': return 'ኮስሞቲክስ';
+                case 'appliances': return 'የቤት መገልገያ';
+                case 'gifts': return 'የስጦታ እቃ';
+                case 'toys': return 'የህፃናት መጫወቻ';
+                default: return 'Allmart';
+            }
+        }
+
         function filterCategory(cat, element) {
             selectedCategory = cat;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
             renderProducts();
         }
 
-        // የመጀመሪያ ገጽ ሲከፈት እቃዎችን ያሳያል
         renderProducts();
     </script>
 </body>
 </html>
+       
