@@ -98,6 +98,7 @@
             <button class="cat-btn" onclick="filterCategory('food', this)">ምግብ እና መጠጥ</button>
             <button class="cat-btn" onclick="filterCategory('cosmetics', this)">ኮስሞቲክስ</button>
             <button class="cat-btn" onclick="filterCategory('appliances', this)">የቤት መገልገያ</button>
+            <button class="cat-btn" onclick="filterCategory('toys', this)">የህፃናት መጫወቻዎች</button>
         </div>
     </div>
 
@@ -109,55 +110,85 @@
         <p>&copy; Allmart Supermarket Ethiopia. All rights reserved.</p>
     </footer>
 
-    <script>
-        const products = [
-            { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: 1400, img: 'food1.png' },
-            { id: 2, category: 'food', name: 'ኦርጋኒክ ማር 1KG', price: 850, img: 'foood4.png' },
-            { id: 3, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: 950, img: 'foood3.png' },
-            { id: 4, category: 'appliances', name: 'Hand Blender', price: 3500, img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' }
-        ];
+   <script>
+    const products = [
+        // --- ምግብ እና መጠጥ (Food & Drinks) ---
+        { id: 1, category: 'food', name: 'የውጭ ሀገር Nutella 750g', price: 1400, img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=500' },
+        { id: 2, category: 'food', name: 'ኦርጋኒክ ማር 1KG', price: 850, img: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500' },
+        { id: 3, category: 'food', name: 'Nescafe Gold Coffee 200g', price: 1200, img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500' },
+        { id: 4, category: 'food', name: 'የምግብ ዘይት 5 ሊትር', price: 1800, img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500' },
+        { id: 5, category: 'food', name: 'Basmati Rice 5KG', price: 1650, img: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500' },
 
-        let selectedCategory = 'all';
+        // --- ኮስሞቲክስና ውበት (Cosmetics) ---
+        { id: 6, category: 'cosmetics', name: 'Nivea Body Lotion 400ml', price: 950, img: 'https://images.unsplash.com/photo-1608248597309-8d76e736a3e1?w=500' },
+        { id: 7, category: 'cosmetics', name: 'CeraVe Facial Cleanser', price: 1850, img: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500' },
+        { id: 8, category: 'cosmetics', name: 'የፊት ክሬም (Moisturizer)', price: 1100, img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500' },
+        { id: 9, category: 'cosmetics', name: 'Victoria Secret Perfume', price: 2400, img: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500' },
 
-        function renderProducts() {
-            const grid = document.getElementById('productGrid');
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            grid.innerHTML = '';
+        // --- የቤት መገልገያ (Home Appliances) ---
+        { id: 10, category: 'appliances', name: 'Electric Hand Blender', price: 3500, img: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500' },
+        { id: 11, category: 'appliances', name: 'Air Fryer 4.5L', price: 8500, img: 'https://images.unsplash.com/photo-1585515320310-259814833e62?w=500' },
+        { id: 12, category: 'appliances', name: 'Electric Kettle (የውሃ ማፍያ)', price: 1600, img: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f6?w=500' },
+        { id: 13, category: 'appliances', name: 'Juice Extractor', price: 4200, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500' },
 
-            const filtered = products.filter(item => {
-                return (selectedCategory === 'all' || item.category === selectedCategory) &&
-                       item.name.toLowerCase().includes(searchInput);
-            });
+        // --- የህፃናት መጫወቻዎች (Toys) ---
+        { id: 14, category: 'toys', name: 'Remote Control Car', price: 2100, img: 'https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500' },
+        { id: 15, category: 'toys', name: 'Teddy Bear (ትልቅ ቦንቦሊኖ)', price: 1750, img: 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=500' },
+        { id: 16, category: 'toys', name: 'Lego Building Blocks', price: 1900, img: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500' },
+        { id: 17, category: 'toys', name: 'የህፃናት እግር ኳስ እና ቅርጫት', price: 1300, img: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=500' }
+    ];
 
-            filtered.forEach(item => {
-                grid.innerHTML += `
-                    <div class="card">
-                        <img src="${item.img}" alt="${item.name}">
-                        <div class="card-content">
-                            <div>
-                                <h3 class="card-title">${item.name}</h3>
-                                <div class="price">${item.price.toLocaleString()} ብር</div>
-                            </div>
-                            <button class="btn-order" onclick="goToCheckout('${item.name}', ${item.price})">እዘዝ</button>
+    const urlParams = new URLSearchParams(window.location.search);
+    let selectedCategory = urlParams.get('cat') || 'all';
+
+    function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        const searchInput = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
+        grid.innerHTML = '';
+
+        const filtered = products.filter(item => {
+            return (selectedCategory === 'all' || item.category === selectedCategory) &&
+                   item.name.toLowerCase().includes(searchInput);
+        });
+
+        filtered.forEach(item => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="card-content">
+                        <div>
+                            <h3 class="card-title">${item.name}</h3>
+                            <div class="price">${item.price.toLocaleString()} ብር</div>
                         </div>
+                        <button class="btn-order" onclick="goToCheckout('${item.name}', ${item.price})">እዘዝ</button>
                     </div>
-                `;
-            });
-        }
+                </div>
+            `;
+        });
 
-        // ወደ order.html የሚወስድ ሊንክ
-        function goToCheckout(name, price) {
-            window.location.href = `order.html?name=${encodeURIComponent(name)}&price=${price}`;
-        }
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            if(btn.getAttribute('onclick').includes(`'${selectedCategory}'`)) {
+                btn.classList.add('active');
+            } else if (selectedCategory === 'all' && btn.getAttribute('onclick').includes("'all'")) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
 
-        function filterCategory(cat, element) {
-            selectedCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            renderProducts();
-        }
+    function goToCheckout(name, price) {
+        window.location.href = `order.html?name=${encodeURIComponent(name)}&price=${price}`;
+    }
 
+    function filterCategory(cat, element) {
+        selectedCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
         renderProducts();
-    </script>
+    }
+
+    renderProducts();
+</script>
 </body>
 </html>
