@@ -8,7 +8,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f8f9fa; color: #333; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     
-    /* Login Box Styles */
     #login-container { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
     #login-container h2 { color: #1a252f; margin-bottom: 20px; }
     .form-group { margin-bottom: 15px; text-align: left; }
@@ -18,19 +17,22 @@
     .login-btn:hover { background: #218838; }
     .error-msg { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
 
-    /* Admin Dashboard Styles */
-    .container { max-width: 1200px; width: 100%; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: none; }
+    .container { max-width: 1300px; width: 100%; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: none; }
     .container h2 { color: #1a252f; margin-bottom: 20px; border-left: 6px solid #28a745; padding-left: 12px; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 14px; }
+    th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 13px; }
     th { background-color: #1a252f; color: white; }
     tr:nth-child(even) { background-color: #f8f9fa; }
     
-    .badge { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .badge { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
     .cbe { background: #d1ecf1; color: #0c5460; }
     .telebirr { background: #fff3cd; color: #856404; }
     .cash { background: #d4edda; color: #155724; }
+
+    .status-btn { padding: 6px 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.3s; }
+    .pending { background: #ffc107; color: #333; }
+    .delivered { background: #28a745; color: white; }
     
     .top-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .refresh-btn { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
@@ -41,7 +43,7 @@
 </head>
 <body>
 
-  <!-- የይለፍ ቃል መጠየቂያ ፕላትፎርም -->
+  <!-- የይለፍ ቃል መጠየቂያ -->
   <div id="login-container">
     <h2>የባለቤት መግቢያ</h2>
     <p style="font-size: 13px; color: #666; margin-bottom: 20px;">እባክዎ የ 8 አሃዝ ምስጢራዊ ቁጥር ያስገቡ</p>
@@ -52,7 +54,7 @@
     <p id="errorMsg" class="error-msg">የገባው የይለፍ ቃል ስህተት ነው!</p>
   </div>
 
-  <!-- የትዕዛዞች ማስተዳደሪያ ሰንጠረዥ (በመጀመሪያ ተደብቋል) -->
+  <!-- የአድሚን ዳሽቦርድ ሰንጠረዥ -->
   <div class="container" id="adminDashboard">
     <div class="top-actions">
       <h2>የገቡ ትዕዛዞች ዝርዝር (Admin Dashboard)</h2>
@@ -67,13 +69,13 @@
         <thead>
           <tr>
             <th>ቀን/ሰዓት</th>
-            <th>የደንበኛ ስም</th>
-            <th>ስልክ ቁጥር</th>
-            <th>እቃው</th>
-            <th>ብዛት</th>
-            <th>ጠቅላላ ዋጋ</th>
+            <th>ደንበኛ</th>
+            <th>ስልክ</th>
+            <th>እቃው / ብዛት</th>
+            <th>ዋጋ</th>
             <th>አድራሻ</th>
-            <th>ክፍያ</th>
+            <th>ክፍያ / ሐሰባዊ መለያ (ID)</th>
+            <th>ሁኔታ (Status)</th>
           </tr>
         </thead>
         <tbody id="orders-table-body">
@@ -85,9 +87,7 @@
 
   <script>
     const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
-    
-    // እዚህ ጋር የፈለጉትን የ 8 አሃዝ ቁጥር ማስቀመጥ ይችላሉ34999543 )
-    const CORRECT_PASSWORD = "34999543";
+    const CORRECT_PASSWORD = "12345678"; // እዚህ ጋር የፈለጉትን የ 8 አሃዝ ፕስወርድ ማድረግ ይችላሉ
 
     function checkPassword() {
       const inputPass = document.getElementById('adminPassword').value;
@@ -131,16 +131,28 @@
           if (order.paymentMethod === 'CBE') paymentClass = 'cbe';
           else if (order.paymentMethod === 'Telebirr') paymentClass = 'telebirr';
 
+          // የትዕዛዝ ሁኔታ (መድረሱ የተረጋገጠ አለመሆኑን ማየት)
+          const isDelivered = order.status === 'delivered';
+          const statusBtnClass = isDelivered ? 'status-btn delivered' : 'status-btn pending';
+          const statusBtnText = isDelivered ? '✅ ደርሷል (Completed)' : '⏳ በመንገድ ላይ (Pending)';
+
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${order.orderDate || '-'}</td>
             <td><b>${order.fullName || 'ስም የሌለው'}</b></td>
             <td>${order.phone || '-'}</td>
-            <td>${order.productName || '-'}</td>
-            <td>${order.quantity || 1}</td>
+            <td>${order.productName} <br>(<b>ብዛት: ${order.quantity || 1}</b>)</td>
             <td style="color: #d9534f; font-weight: bold;">${order.totalPrice || 0} ብር</td>
             <td>${order.address || '-'}</td>
-            <td><span class="badge ${paymentClass}">${order.paymentMethod || 'Cash'}</span></td>
+            <td>
+              <span class="badge ${paymentClass}">${order.paymentMethod || 'Cash'}</span><br>
+              <small style="color: #555;">ID: ${order.transactionId || 'ከትዕዛዝ ውጭ'}</small>
+            </td>
+            <td>
+              <button class="${statusBtnClass}" onclick="toggleStatus('${key}', '${order.status || 'pending'}')">
+                ${statusBtnText}
+              </button>
+            </td>
           `;
           tbody.appendChild(row);
         });
@@ -148,6 +160,28 @@
       } catch (error) {
         console.error("Error:", error);
         tbody.innerHTML = "<tr><td colspan='8' style='text-align: center; color: red;'>ዳታውን ማምጣት አልተቻለም።</td></tr>";
+      }
+    }
+
+    // እቃው መድረሱን ወይም ባለመድረሱ ሁኔታን መቀየሪያ
+    async function toggleStatus(orderId, currentStatus) {
+      const newStatus = (currentStatus === 'delivered') ? 'pending' : 'delivered';
+      
+      try {
+        const response = await fetch(`${DATABASE_URL}/orders/${orderId}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        if (response.ok) {
+          loadOrders(); // ሰንጠረዡን በራሱ አድሶ ያሳየዋል
+        } else {
+          alert("ሁኔታውን መቀየር አልተቻለም።");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("የኔትወርክ ችግር አጋጥሟል።");
       }
     }
   </script>
