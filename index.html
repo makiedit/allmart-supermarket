@@ -8,6 +8,20 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f8f9fa; color: #333; }
 
+    /* Top Navigation Bar */
+    .top-nav {
+      background: #1a252f;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+    }
+    .top-nav .logo { font-size: 22px; font-weight: bold; color: #28a745; }
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+    .nav-links a { color: white; text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.3s; }
+    .nav-links a:hover { color: #28a745; }
+
     /* Header / Hero Section */
     .hero {
       min-height: 300px;
@@ -63,6 +77,16 @@
 </head>
 <body>
 
+  <!-- የላይኛው አሰሳ (Navigation Bar) ከስለ እኛ እና አድራሻ ማገናኛዎች ጋር -->
+  <nav class="top-nav">
+    <div class="logo">Allmart Supermarket</div>
+    <ul class="nav-links">
+      <li><a href="index.html">ዋና ገጽ</a></li>
+      <li><a href="about.html">ስለ እኛ</a></li>
+      <li><a href="location.html">አድራሻ</a></li>
+    </ul>
+  </nav>
+
   <header class="hero">
     <h1>ALLMART <span>SUPERMARKET</span></h1>
     <p>የሚፈልጉትን የምግብ ዝርያዎች፣ የህፃናት መጫወቻዎች፣ ኮስሞቲክሶች እና የተመረጡ የስጦታ እቃዎችን በጥራት እና በቅናሽ ያግኙ!</p>
@@ -115,7 +139,6 @@
 
       let displayItems = allItems;
 
-      // ከፋየርቤዝ የገቡትንም ጨምሮ ማጣራት
       try {
         const res = await fetch(`${DATABASE_URL}/products.json`);
         const data = await res.json();
@@ -127,7 +150,6 @@
         console.log("Using default items");
       }
 
-      // የተመረጠውን ምድብ ብቻ ማጣራት
       if (selectedCategory !== 'ሁሉም') {
         displayItems = displayItems.filter(item => item.category === selectedCategory);
       }
@@ -158,10 +180,8 @@
     }
 
     function filterCategory(category, btnElement) {
-      // የቁልፎቹን active ስታይል መቀየር
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       btnElement.classList.add('active');
-
       loadProducts(category);
     }
 
