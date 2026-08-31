@@ -73,29 +73,29 @@
         </div>
       </div>
 
-      <button type="submit" class="submit-btn">ትዕዛዙን ይላኩ</button>
+      <button type="submit" class="submit-btn" id="submitBtn">ትዕዛዙን ይላኩ</button>
     </form>
   </div>
 
   <script>
+    const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
+
     const urlParams = new URLSearchParams(window.location.search);
-    const productName = urlParams.get('name');
+    const productName = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')) : "ያልታወቀ እቃ";
     const unitPrice = parseFloat(urlParams.get('price')) || 0;
 
     if (productName && unitPrice) {
-      document.getElementById('product-name').innerText = decodeURIComponent(productName);
+      document.getElementById('product-name').innerText = productName;
       document.getElementById('unit-price').innerText = unitPrice;
       document.getElementById('total-price').innerText = unitPrice;
     }
 
-    // ብዛት ሲቀየር አጠቃላይ ዋጋውን በራሱ ማስያዣ
     function calculateTotal() {
       const qty = parseInt(document.getElementById('quantity').value) || 1;
       const total = unitPrice * qty;
       document.getElementById('total-price').innerText = total;
     }
 
-    // የክፍያ አማራጭ ሲመረጥ ተጨማሪ መረጃ ማሳያ
     function showPaymentInfo(method) {
       const detailsBox = document.getElementById('payment-details');
       if (method === 'CBE') {
@@ -112,13 +112,47 @@
       }
     }
 
-    // ትዕዛዝ ሲላክ
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
+    // ትዕዛዝ ሲላክ መረጃውን ወደ Firebase DataBase መላክ
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const qty = document.getElementById('quantity').value;
-      const total = document.getElementById('total-price').innerText;
-      alert(`ትዕዛዝዎ በተሳካ ሁኔታ ተቀብለናል!\nብዛት: ${qty}\nጠቅላላ ዋጋ: ${total} ብር\nእናመሰግናለን!`);
-      window.location.href = "index.html";
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = " በመላክ ላይ...";
+      submitBtn.disabled = true;
+
+      const orderData = {
+        productName: productName,
+        unitPrice: unitPrice,
+        quantity: parseInt(document.getElementById('quantity').value),
+        totalPrice: parseFloat(document.getElementById('total-price').innerText),
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        paymentMethod: document.getElementById('paymentMethod').value,
+        orderDate: new Date().toLocaleString()
+      };
+
+      try {
+        const response = await fetch(`${DATABASE_URL}/orders.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+          alert("ትዕዛዝዎ በተሳካ ሁኔታ ተመዝግቧል! እናመሰግናለን።");
+          window.location.href = "index.html";
+        } else {
+          alert("ትዕዛዙን መላክ አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
+          submitBtn.innerText = "ትዕዛዙን ይላኩ";
+          submitBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("የኔትወርክ ችግር አጋጥሟል።");
+        submitBtn.innerText = "ትዕዛዙን ይላኩ";
+        submitBtn.disabled = false;
+      }
     });
   </script>
 </body>
