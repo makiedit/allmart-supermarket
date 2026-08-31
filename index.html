@@ -181,13 +181,21 @@
             window.location.href = `order.html?name=${encodeURIComponent(name)}&price=${price}`;
         }
 
-        function filterCategory(cat, element) {
-            selectedCategory = cat;
-            selectedSubcategory = 'all';
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            if(element) element.classList.add('active');
-            renderProducts();
-        }
+       function filterCategory(cat, element) {
+  selectedCategory = cat;
+  selectedSubcategory = 'all';
+
+  // የነበሩትን አዝራሮች active class ማንሳት
+  document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+
+  // አሁን የተጫነውን አዝራር active ማድረግ
+  if (element) {
+    element.classList.add('active');
+  }
+
+  // እቃዎቹን ድጋሚ ማሳየት
+  renderProducts();
+}
     </script>
 </body>
 </html>
