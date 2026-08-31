@@ -71,10 +71,10 @@
         
         <div id="payment-details"></div>
 
-        <!-- የትራንዛክሽን ቁጥር ማስገቢያ (ባንክ ወይም ቴሌብር ሲመረጥ ብቻ የሚመጣ) -->
         <div class="form-group" id="trx-group">
-          <label for="transactionId" style="margin-top: 10px; color: #d9534f;">የክፍያ ማረጋገጫ (Transaction ID / Receipt No)</label>
-          <input type="text" id="transactionId" placeholder="ለምሳሌ: FT23... ወይም የትራንዛክሽን ቁጥር">
+          <label for="transactionId" style="margin-top: 10px; color: #d9534f;">የክፍያ ማረጋገጫ ቁጥር (Transaction ID)</label>
+          <input type="text" id="transactionId" placeholder="ትክክለኛውን የትራንዛክሽን ቁጥር ያስገቡ">
+          <small style="color: #666; font-size: 11px;">* የባንክ ወይም የቴሌብር ትክክለኛ የረጅም ቁጥር መሆን አለበት (ቢያንስ 8 ፊደል/ቁጥር)</small>
         </div>
       </div>
 
@@ -108,12 +108,12 @@
 
       if (method === 'CBE') {
         detailsBox.style.display = 'block';
-        detailsBox.innerHTML = "<b>የንግድ ባንክ አካውንት:</b> 1000xxxxxxxxx (ማክቤል ካሰዬ)<br>እባክዎ ገንዘቡን ከላኩ በኋላ የትራንዛክሽን ቁጥሩን ከታች ያስገቡ።";
+        detailsBox.innerHTML = "<b>የንግድ ባንክ አካውንት:</b> 1000xxxxxxxxx (ማክቤል ካሰዬ)<br>ገንዘቡን ከላኩ በኋላ የሚመጣውን ትክክለኛ የትራንዛክሽን ቁጥር (ለምሳሌ: FT...) ያስገቡ።";
         trxGroup.style.display = 'block';
         trxInput.required = true;
       } else if (method === 'Telebirr') {
         detailsBox.style.display = 'block';
-        detailsBox.innerHTML = "<b>የቴሌብር ቁጥር:</b> 09xxxxxxxx (Allmart Supermarket)<br>በዚህ ቁጥር ገንዘቡን ካስተላለፉ በኋላ የትራንዛክሽን ቁጥሩን ከታች ያስገቡ።";
+        detailsBox.innerHTML = "<b>የቴሌብር ቁጥር:</b> 09xxxxxxxx (Allmart Supermarket)<br>የቴሌብር ክፍያ ማረጋገጫ ቁጥርዎን ከታች ያስገቡ።";
         trxGroup.style.display = 'block';
         trxInput.required = true;
       } else if (method === 'Cash') {
@@ -134,12 +134,16 @@
       e.preventDefault();
 
       const paymentMethod = document.getElementById('paymentMethod').value;
-      const trxId = document.getElementById('transactionId').value;
+      const trxId = document.getElementById('transactionId').value.trim();
 
-      // ባንክ ወይም ቴሌብር ተመርጦ ትራንዛክሽን ቁጥር ካልተገባ እንዳይልክ ማገድ
-      if ((paymentMethod === 'CBE' || paymentMethod === 'Telebirr') && !trxId.trim()) {
-        alert("እባክዎ ክፍያ መፈጸምዎን የሚያሳይ የትራንዛክሽን (Transaction ID) ቁጥር ያስገቡ!");
-        return;
+      // የትራንዛክሽን ቁጥሩ ትክክለኛ መሆኑን ማረጋገጫ (Validation)
+      if (paymentMethod === 'CBE' || paymentMethod === 'Telebirr') {
+        // ቁጥሩ ባዶ ከሆነ ወይም ከ 8 ፊደል/ቁጥር በታች ከሆነ ውድቅ ያደርገዋል
+        if (trxId.length < 8) {
+          alert("ስህተት! ያስገቡት የክፍያ ማረጋገጫ (Transaction ID) ትክክለኛ አይደለም። እባክዎ ትክክለኛውን የባንክ ወይም የቴሌብር ረጅም ቁጥር ያስገቡ።");
+          document.getElementById('transactionId').focus();
+          return;
+        }
       }
 
       const submitBtn = document.getElementById('submitBtn');
@@ -160,13 +164,20 @@
       };
 
       try {
-        const response = await fetch(`${DATABASE_URL}/orders.json`, {
+        const response = += await fetch(`${DATABASE_URL}/orders.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        
+        // (ማስታወሻ: የቀጥታ ትክክለኛ የ fetch ትዕዛዝ)
+        const resCheck = await fetch(`${DATABASE_URL}/orders.json`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderData)
         });
 
-        if (response.ok) {
+        if (resCheck.ok) {
           alert("ትዕዛዝዎ እና የክፍያ ማረጋገጫዎ በተሳካ ሁኔታ ተመዝግቧል! እናመሰግናለን።");
           window.location.href = "index.html";
         } else {
