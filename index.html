@@ -5,52 +5,225 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Allmart Supermarket</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
-    .category-container { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .cat-btn { padding: 10px 15px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px; }
-    .cat-btn.active { background: #0056b3; font-weight: bold; }
-    .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-    .product-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-    .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 5px; }
-    .price { color: green; font-weight: bold; }
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    /* Header & Logo */
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* የድርጅቱ ሎጎ ማስተካከያ */
+    .logo-img {
+      width: 45px;
+      height: 45px;
+      background-color: #28a745;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a252f;
+    }
+
+    .logo-text span {
+      color: #28a745;
+    }
+
+    /* Categories Menu */
+    .category-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 5%;
+      flex-wrap: wrap;
+    }
+
+    .cat-btn {
+      padding: 10px 22px;
+      border: 2px solid #28a745;
+      background: white;
+      color: #28a745;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cat-btn:hover, .cat-btn.active {
+      background: #28a745;
+      color: white;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    }
+
+    /* Main Container & Grid */
+    main {
+      padding: 10px 5% 40px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    /* Product Cards */
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background-color: #eee;
+    }
+
+    .card-body {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      font-size: 18px;
+      color: #28a745;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .order-btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: #1a252f;
+      color: white;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .order-btn:hover {
+      background: #28a745;
+    }
+
+    .loading-text, .empty-text {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #7f8c8d;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Allmart Supermarket</h2>
+  <!-- Header Section with Logo -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-img">A</div>
+      <div class="logo-text">Allmart <span>Supermarket</span></div>
+    </div>
+  </header>
 
-  <!-- ካቴጎሪ መምረጫ አዝራሮች -->
+  <!-- Categories Navigation -->
   <div class="category-container">
     <button class="cat-btn active" onclick="filterCategory('all', this)">ሁሉንም</button>
-    <button class="cat-btn" onclick="filterCategory('ምግብና መጥጥ', this)">ምግብና መጠጥ</button>
+    <button class="cat-btn" onclick="filterCategory('ምግብና መጠጥ', this)">ምግብና መጠጥ</button>
     <button class="cat-btn" onclick="filterCategory('cosmetics', this)">ኮስሞቲክስ</button>
   </div>
 
-  <!-- እቃዎች የሚታዩበት ቦታ -->
-  <div id="product-list" class="product-list">
-    <p>እቃዎች እየጫኑ ነው...</p>
-  </div>
+  <!-- Products Showcase -->
+  <main>
+    <div id="product-list" class="product-grid">
+      <div class="loading-text">እቃዎች እየጫኑ ነው... እባክዎ ይጠብቁ</div>
+    </div>
+  </main>
 
+  <!-- JavaScript Code -->
   <script>
     const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
     let allProducts = [];
     let selectedCategory = 'all';
 
     async function fetchProducts() {
+      const container = document.getElementById('product-list');
       try {
         const response = await fetch(`${DATABASE_URL}/.json`);
         const data = await response.json();
 
         if (!data) {
-          document.getElementById('product-list').innerHTML = "<p>ምንም እቃ አልተገኘም።</p>";
+          container.innerHTML = `<div class="empty-text">ምንም እቃ አልተገኘም።</div>`;
           return;
         }
 
-        allProducts = Array.isArray(data) ? data : Object.values(data);
+        // Firebase Data Flattening
+        let rawProducts = Array.isArray(data) ? data : Object.values(data);
+        
+        // ባዶ / Invalid እቃዎችን ማጽጃ (Filtering valid products)
+        allProducts = rawProducts.filter(item => {
+          return item && typeof item === 'object' && (item.name || item.price);
+        });
+
         renderProducts();
       } catch (error) {
-        console.error("Data error:", error);
-        document.getElementById('product-list').innerHTML = "<p>መረጃውን መጫን አልተቻለም።</p>";
+        console.error("Error fetching products:", error);
+        container.innerHTML = `<div class="empty-text">መረጃውን መጫን አልተቻለም። እባክዎ ኢንተርኔትዎን ያረጋግጡ።</div>`;
       }
     }
 
@@ -59,27 +232,41 @@
       container.innerHTML = "";
 
       const filtered = allProducts.filter(item => {
-        if (!item) return false;
         if (selectedCategory === 'all') return true;
-        
-        // በካቴጎሪ ፊደል ልዩነት ምክንያት እንዳይበላሽ Case-insensitive ያደርገዋል
-        return item.category && item.category.trim().toLowerCase() === selectedCategory.trim().toLowerCase();
+        if (!item.category) return false;
+
+        const cat = item.category.trim().toLowerCase();
+        const selected = selectedCategory.trim().toLowerCase();
+
+        // cosmetics እና cosmotics ሁለቱንም እንዲቀበል ተደርጓል
+        if (selected === 'cosmetics' && (cat === 'cosmetics' || cat === 'cosmotics')) {
+          return true;
+        }
+
+        return cat === selected;
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = "<p>በዚህ ካቴጎሪ ምንም እቃ የለም።</p>";
+        container.innerHTML = `<div class="empty-text">በዚህ ካቴጎሪ ምንም እቃ አልተገኘም።</div>`;
         return;
       }
 
       filtered.forEach(product => {
-        const imageSrc = product.image && product.image.trim() !== "" ? product.image : 'https://via.placeholder.com/150';
+        const title = product.name || 'ስም ያልተጠቀሰ እቃ';
+        const price = product.price ? `${product.price} ብር` : 'ያልተወሰነ';
+        const image = (product.image && product.image.trim() !== '') 
+          ? product.image 
+          : 'https://via.placeholder.com/300x200?text=No+Image';
 
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <img src="${imageSrc}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/150'">
-          <h3>${product.name || 'ስም የለውም'}</h3>
-          <p class="price">${product.price || 0} ብር</p>
+          <img src="${image}" alt="${title}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Error'">
+          <div class="card-body">
+            <div class="product-title">${title}</div>
+            <div class="product-price">${price}</div>
+            <button class="order-btn" onclick="goToCheckout('${encodeURIComponent(title)}', '${product.price || 0}')">እዘዝ</button>
+          </div>
         `;
         container.appendChild(card);
       });
@@ -92,7 +279,10 @@
       renderProducts();
     }
 
-    // ገጹ ሲከፈት ዳታ እንዲያመጣ ማድረግ
+    function goToCheckout(name, price) {
+      window.location.href = `order.html?name=${name}&price=${price}`;
+    }
+
     document.addEventListener("DOMContentLoaded", fetchProducts);
   </script>
 </body>
