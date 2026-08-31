@@ -23,6 +23,7 @@
 
     .submit-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
     .submit-btn:hover { background: #218838; }
+    .submit-btn:disabled { background: #6c757d; cursor: not-allowed; }
 
     #payment-details { display: none; margin-top: 10px; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; font-size: 13px; color: #856404; }
     #trx-group { display: none; margin-top: 10px; }
@@ -164,24 +165,18 @@
       };
 
       try {
-        const response = += await fetch(`${DATABASE_URL}/orders.json`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-        
-        // (ማስታወሻ: የቀጥታ ትክክለኛ የ fetch ትዕዛዝ)
-        const resCheck = await fetch(`${DATABASE_URL}/orders.json`, {
+        // የዳታቤዝ ትዕዛዙ (እዚህ ጋ ነበር ስህተት የነበረው፣ አሁን ተስተካክሏል)
+        const response = await fetch(`${DATABASE_URL}/orders.json`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderData)
         });
 
-        if (resCheck.ok) {
+        if (response.ok) {
           alert("ትዕዛዝዎ እና የክፍያ ማረጋገጫዎ በተሳካ ሁኔታ ተመዝግቧል! እናመሰግናለን።");
-          window.location.href = "index.html";
+          window.location.href = "index.html"; // ወደ ዋናው ገጽ ይመለሳል
         } else {
-          alert("ትዕዛዙን መላክ አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
+          alert("ትዕዛዙን መላክ አልተቻለም። እባክዎ ዳታቤዝዎን ይፈትሹ።");
           submitBtn.innerText = "ትዕዛዙን ይላኩ";
           submitBtn.disabled = false;
         }
