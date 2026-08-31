@@ -1,66 +1,45 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>መገኛ ቦታ | Allmart Supermarket</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
-
-        nav { background: #ffffff; padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.8rem; font-weight: 800; color: #16a34a; text-decoration: none; }
-        .logo span { color: #dc2626; }
-        .nav-links a { margin-left: 15px; text-decoration: none; color: #334155; font-weight: 600; }
-        .nav-links a.active { color: #16a34a; }
-
-        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-        .info-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        h1 { color: #0f172a; margin-bottom: 20px; text-align: center; }
-
-        .contact-details { margin-bottom: 25px; }
-        .contact-item { font-size: 1.1rem; margin-bottom: 12px; color: #334155; display: flex; align-items: center; gap: 10px; }
-        
-        .map-frame { width: 100%; height: 350px; border: none; border-radius: 12px; margin-top: 15px; }
-
-        footer { text-align: center; padding: 25px; background: #0f172a; color: #94a3b8; margin-top: 40px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>አድራሻችን - Allmart Supermarket</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f8f9fa; color: #333; }
+    nav { background: #1a252f; color: white; display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; }
+    .logo { font-size: 22px; font-weight: bold; color: #28a745; }
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+    .nav-links a { color: white; text-decoration: none; font-size: 15px; }
+    .content { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+    h1 { color: #1a252f; margin-bottom: 20px; }
+    .info-box { font-size: 18px; line-height: 2; color: #444; margin-top: 20px; }
+    footer { background: #1a252f; color: #ccc; text-align: center; padding: 25px; margin-top: 60px; }
+  </style>
 </head>
 <body>
+  <nav>
+    <div class="logo">Allmart Supermarket</div>
+    <ul class="nav-links">
+      <li><a href="index.html">ዋና ገጽ</a></li>
+      <li><a href="about.html">ስለ እኛ</a></li>
+      <li><a href="location.html">አድራሻ</a></li>
+      <li><a href="admin.html">አድሚን</a></li>
+    </ul>
+  </nav>
 
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="logo">ALL<span>MART</span></a>
-            <div class="nav-links">
-                <a href="index.html">ዋና ገፅ</a>
-                <a href="categories.html">የእቃ አይነቶች</a>
-                <a href="about.html">ስለ እኛ</a>
-                <a href="location.html" class="active">መገኛ ቦታ</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="info-card">
-            <h1>ያግኙን እና መገኛ ቦታችን</h1>
-            
-            <div class="contact-details">
-                <div class="contact-item">📍 <strong>አድራሻ፦</strong> አዲስ አበባ፣ ኢትዮጵያ</div>
-                <div class="contact-item">📞 <strong>ስልክ ቁጥር፦</strong> +251 911 000 000 / +251 922 000 000</div>
-                <div class="contact-item">✉️ <strong>ኢሜይል፦</strong> info@allmart.com</div>
-                <div class="contact-item">⏰ <strong>የስራ ሰዓት፦</strong> ከሰኞ - እሁድ (ከጠዋቱ 2:00 - ከምሽቱ 3:00)</div>
-            </div>
-
-            <h3 style="color: #0f172a; margin-top: 20px;">ካርታ (Google Maps)</h3>
-            <!-- የጉግል ካርታ ማሳያ -->
-            <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126115.11181827476!2d38.7042656!3d9.0107936!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85cef5ab402d%3A0x8467b6b037a24d49!2sAddis%20Ababa!5e0!3m2!1sen!2set!4v1680000000000" allowfullscreen="" loading="lazy"></iframe>
-        </div>
+  <div class="content">
+    <h1>የኛ አድራሻ</h1>
+    <div class="info-box">
+      <p>📍 <strong>ከተማ፦</strong> ጎንደር፣ ኢትዮጵያ</p>
+      <p>📞 <strong>ስልክ ቁጥር፦</strong> +251 900 00 00 00 / +251 911 00 00 00</p>
+      <p>✉️ <strong>ኢሜል፦</strong> info@allmartsupermarket.com</p>
+      <p>⏰ <strong>የስራ ሰዓት፦</strong> ከሰኞ እስከ እሁድ ከነገዋ 2:00 እስከ ማታ 4:00 ሰዓት</p>
     </div>
+  </div>
 
-    <footer>
-        <p>&copy; Allmart Supermarket. All rights reserved.</p>
-    </footer>
-
+  <footer>
+    <p>&copy; 2026 Allmart Supermarket.</p>
+  </footer>
 </body>
 </html>
