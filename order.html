@@ -25,6 +25,7 @@
     .submit-btn:hover { background: #218838; }
 
     #payment-details { display: none; margin-top: 10px; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; font-size: 13px; color: #856404; }
+    #trx-group { display: none; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -68,8 +69,12 @@
           <option value="Cash">እቃው ሲደርሰን በጥሬ ገንዘብ (Cash on Delivery)</option>
         </select>
         
-        <div id="payment-details">
-          <!-- የክፍያ ዝርዝር መመሪያ እዚህ ይጫናል -->
+        <div id="payment-details"></div>
+
+        <!-- የትራንዛክሽን ቁጥር ማስገቢያ (ባንክ ወይም ቴሌብር ሲመረጥ ብቻ የሚመጣ) -->
+        <div class="form-group" id="trx-group">
+          <label for="transactionId" style="margin-top: 10px; color: #d9534f;">የክፍያ ማረጋገጫ (Transaction ID / Receipt No)</label>
+          <input type="text" id="transactionId" placeholder="ለምሳሌ: FT23... ወይም የትራንዛክሽን ቁጥር">
         </div>
       </div>
 
@@ -98,26 +103,47 @@
 
     function showPaymentInfo(method) {
       const detailsBox = document.getElementById('payment-details');
+      const trxGroup = document.getElementById('trx-group');
+      const trxInput = document.getElementById('transactionId');
+
       if (method === 'CBE') {
         detailsBox.style.display = 'block';
-        detailsBox.innerHTML = "<b>የንግድ ባንክ አካውንት:</b> 1000xxxxxxxxx (ማክቤል ካሰዬ)<br>እባክዎ ገንዘቡን ከላኩ በኋላ የትራንዛክሽን ቁጥሩን ያስተውሉ።";
+        detailsBox.innerHTML = "<b>የንግድ ባንክ አካውንት:</b> 1000xxxxxxxxx (ማክቤል ካሰዬ)<br>እባክዎ ገንዘቡን ከላኩ በኋላ የትራንዛክሽን ቁጥሩን ከታች ያስገቡ።";
+        trxGroup.style.display = 'block';
+        trxInput.required = true;
       } else if (method === 'Telebirr') {
         detailsBox.style.display = 'block';
-        detailsBox.innerHTML = "<b>የቴሌብር ቁጥር:</b> 09xxxxxxxx (Allmart Supermarket)<br>በዚህ ቁጥር ገንዘቡን ያስተላልፉ።";
+        detailsBox.innerHTML = "<b>የቴሌብር ቁጥር:</b> 09xxxxxxxx (Allmart Supermarket)<br>በዚህ ቁጥር ገንዘቡን ካስተላለፉ በኋላ የትራንዛክሽን ቁጥሩን ከታች ያስገቡ።";
+        trxGroup.style.display = 'block';
+        trxInput.required = true;
       } else if (method === 'Cash') {
         detailsBox.style.display = 'block';
         detailsBox.innerHTML = "እቃው ቤትዎ ሲደርስ ክፍያውን በቀጥታ ለላኪው በጥሬ ገንዘብ መፈጸም ይችላሉ።";
+        trxGroup.style.display = 'none';
+        trxInput.required = false;
+        trxInput.value = "";
       } else {
         detailsBox.style.display = 'none';
+        trxGroup.style.display = 'none';
+        trxInput.required = false;
+        trxInput.value = "";
       }
     }
 
-    // ትዕዛዝ ሲላክ መረጃውን ወደ Firebase DataBase መላክ
     document.getElementById('orderForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      
+
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const trxId = document.getElementById('transactionId').value;
+
+      // ባንክ ወይም ቴሌብር ተመርጦ ትራንዛክሽን ቁጥር ካልተገባ እንዳይልክ ማገድ
+      if ((paymentMethod === 'CBE' || paymentMethod === 'Telebirr') && !trxId.trim()) {
+        alert("እባክዎ ክፍያ መፈጸምዎን የሚያሳይ የትራንዛክሽን (Transaction ID) ቁጥር ያስገቡ!");
+        return;
+      }
+
       const submitBtn = document.getElementById('submitBtn');
-      submitBtn.innerText = " በመላክ ላይ...";
+      submitBtn.innerText = "በመላክ ላይ...";
       submitBtn.disabled = true;
 
       const orderData = {
@@ -128,7 +154,8 @@
         fullName: document.getElementById('fullName').value,
         phone: document.getElementById('phone').value,
         address: document.getElementById('address').value,
-        paymentMethod: document.getElementById('paymentMethod').value,
+        paymentMethod: paymentMethod,
+        transactionId: trxId ? trxId : "Cash on Delivery",
         orderDate: new Date().toLocaleString()
       };
 
@@ -140,7 +167,7 @@
         });
 
         if (response.ok) {
-          alert("ትዕዛዝዎ በተሳካ ሁኔታ ተመዝግቧል! እናመሰግናለን።");
+          alert("ትዕዛዝዎ እና የክፍያ ማረጋገጫዎ በተሳካ ሁኔታ ተመዝግቧል! እናመሰግናለን።");
           window.location.href = "index.html";
         } else {
           alert("ትዕዛዙን መላክ አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
