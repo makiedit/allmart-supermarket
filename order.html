@@ -37,13 +37,13 @@
         <input type="tel" id="phone" required>
       </div>
       <div class="form-group">
-        <label>አድራሻ</label>
+        <label>አድራሻ (ቦታ)</label>
         <textarea id="address" rows="2" required></textarea>
       </div>
       <button type="submit" class="btn">ትዕዛዙን ላክ</button>
     </form>
     <div id="msg"></div>
-    <a href="index.html" class="back">⬅️ ተመለስ</a>
+    <a href="index.html" class="back">⬅️ ወደ ዋናው ገጽ ተመለስ</a>
   </div>
 
   <script>
@@ -78,7 +78,7 @@
         });
         if (res.ok) {
           msg.style.color = "green";
-          msg.innerText = "✅ ትዕዛዝዎ ደርሶናል!";
+          msg.innerText = "✅ ትዕዛዝዎ በስኬት ተልኳል!";
           document.getElementById('order-form').reset();
         }
       } catch (err) {
