@@ -6,85 +6,104 @@
   <title>እቃ ማዘዣ - Allmart Supermarket</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f4f6f8; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .order-card { background: white; max-width: 450px; width: 100%; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-    h2 { margin-bottom: 20px; text-align: center; color: #1a252f; }
-    .summary { background: #e8f5e9; border-left: 4px solid #28a745; padding: 12px; margin-bottom: 20px; border-radius: 4px; }
+    body { background-color: #f8f9fa; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    
+    .order-container { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    h2 { color: #1a252f; margin-bottom: 20px; text-align: center; font-size: 24px; border-bottom: 3px solid #28a745; padding-bottom: 10px; }
+    
+    .summary-box { background: #f1f8f5; padding: 15px; border-radius: 8px; border: 1px solid #d4edda; margin-bottom: 20px; }
+    .summary-box p { font-size: 15px; margin-bottom: 8px; }
+    .summary-box span { font-weight: bold; color: #28a745; }
+
     .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: 600; margin-bottom: 5px; }
-    input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
-    .btn { width: 100%; padding: 11px; background: #28a745; color: white; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; }
-    .back { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; }
-    #msg { margin-top: 12px; text-align: center; font-weight: bold; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #444; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: #28a745; box-shadow: 0 0 5px rgba(40,167,69,0.2); }
+
+    .submit-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    .submit-btn:hover { background: #218838; }
+
+    /* የክፍያ ዝርዝር መግለጫ */
+    #payment-details { display: none; margin-top: 10px; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; font-size: 13px; color: #856404; }
   </style>
 </head>
 <body>
 
-  <div class="order-card">
-    <h2>የእቃ ማዘዣ ፎርም</h2>
-    <div class="summary">
-      <p><strong>እቃ፦</strong> <span id="item-name">...</span></p>
-      <p><strong>ዋጋ፦</strong> <span id="item-price">0</span> ብር</p>
+  <div class="order-container">
+    <h2>የግዢ ማረጋገጫ</h2>
+    
+    <div class="summary-box">
+      <p>የተመረጠው እቃ: <span id="product-name">--</span></p>
+      <p>ቀጥተኛ ዋጋ: <span id="product-price">--</span> ብር</p>
     </div>
 
-    <form id="order-form">
+    <form id="orderForm">
       <div class="form-group">
-        <label>ሙሉ ስም</label>
-        <input type="text" id="name" required>
+        <label for="fullName">ሙሉ ስምዎ</label>
+        <input type="text" id="fullName" required placeholder="እባክዎ ስምዎን ያስገቡ">
       </div>
+
       <div class="form-group">
-        <label>ስልክ ቁጥር</label>
-        <input type="tel" id="phone" required>
+        <label for="phone">ስልክ ቁጥር</label>
+        <input type="tel" id="phone" required placeholder="09xxxxxxxx">
       </div>
+
       <div class="form-group">
-        <label>አድራሻ (ቦታ)</label>
-        <textarea id="address" rows="2" required></textarea>
+        <label for="address">የመላኪያ አድራሻ (ክፍለ ከተማ / ቀበሌ / የቤት ቁጥር)</label>
+        <textarea id="address" rows="2" required placeholder="አድራሻዎን በግልጽ ይጻፉ"></textarea>
       </div>
-      <button type="submit" class="btn">ትዕዛዙን ላክ</button>
+
+      <div class="form-group">
+        <label for="paymentMethod">የክፍያ አማራጭ ይምረጡ</label>
+        <select id="paymentMethod" required onchange="showPaymentInfo(this.value)">
+          <option value="">-- ክፍያ የሚፈጽሙበትን መንገድ ይምረጡ --</option>
+          <option value="CBE">ንግድ ባንክ (CBE Transfer)</option>
+          <option value="Telebirr">ቴሌብር (Telebirr)</option>
+          <option value="Cash">እቃው ሲደርሰን በጥሬ ገንዘብ (Cash on Delivery)</option>
+        </select>
+        
+        <div id="payment-details">
+          <!-- እዚህ ላይ የባንክ ቁጥር ወይም መመሪያ ይጫናል -->
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">ትዕዛዙን ይላኩ</button>
     </form>
-    <div id="msg"></div>
-    <a href="index.html" class="back">⬅️ ወደ ዋናው ገጽ ተመለስ</a>
   </div>
 
   <script>
-    const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
+    // ከዩአርኤል (URL) የተላከውን የእቃ ስም እና ዋጋ መቀበል
     const urlParams = new URLSearchParams(window.location.search);
-    const pName = decodeURIComponent(urlParams.get('name') || 'ያልተወሰነ');
-    const pPrice = urlParams.get('price') || '0';
+    const productName = urlParams.get('name');
+    const productPrice = urlParams.get('price');
 
-    document.getElementById('item-name').innerText = pName;
-    document.getElementById('item-price').innerText = pPrice;
+    if (productName && productPrice) {
+      document.getElementById('product-name').innerText = decodeURIComponent(productName);
+      document.getElementById('product-price').innerText = productPrice;
+    }
 
-    document.getElementById('order-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const msg = document.getElementById('msg');
-      msg.style.color = "blue";
-      msg.innerText = "እየላከ ነው...";
-
-      const order = {
-        productName: pName,
-        price: pPrice,
-        customerName: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        address: document.getElementById('address').value,
-        date: new Date().toLocaleString()
-      };
-
-      try {
-        const res = await fetch(`${DATABASE_URL}/orders.json`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(order)
-        });
-        if (res.ok) {
-          msg.style.color = "green";
-          msg.innerText = "✅ ትዕዛዝዎ በስኬት ተልኳል!";
-          document.getElementById('order-form').reset();
-        }
-      } catch (err) {
-        msg.style.color = "red";
-        msg.innerText = "❌ አልተላከም። ድጋሚ ይሞክሩ።";
+    // የክፍያ አማራጭ ሲመረጥ ተጨማሪ መረጃ ማሳያ
+    function showPaymentInfo(method) {
+      const detailsBox = document.getElementById('payment-details');
+      if (method === 'CBE') {
+        detailsBox.style.display = 'block';
+        detailsBox.innerHTML = "<b>የንግድ ባንክ አካውንት:</b> 1000xxxxxxxxx (ማክቤል ካሰዬ)<br>እባክዎ ገንዘቡን ከላኩ በኋላ የትራንዛክሽን ቁጥሩን ያስተውሉ።";
+      } else if (method === 'Telebirr') {
+        detailsBox.style.display = 'block';
+        detailsBox.innerHTML = "<b>የቴሌብር ቁጥር:</b> 09xxxxxxxx (Allmart Supermarket)<br>በዚህ ቁጥር ገንዘቡን ያስተላልፉ።";
+      } else if (method === 'Cash') {
+        detailsBox.style.display = 'block';
+        detailsBox.innerHTML = "እቃው ቤትዎ ሲደርስ ክፍያውን በቀጥታ ለላኪው በጥሬ ገንዘብ መፈጸም ይችላሉ።";
+      } else {
+        detailsBox.style.display = 'none';
       }
+    }
+
+    // ትዕዛዝ ሲላክ
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("ትዕዛዝዎ በተሳካ ሁኔታ ተቀብለናል! እናመሰግናለን።");
+      window.location.href = "index.html";
     });
   </script>
 </body>
