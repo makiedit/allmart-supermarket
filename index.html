@@ -15,9 +15,12 @@
     body {
       background-color: #f4f6f8;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    /* Hero Section (በትልቁ የሱፐርማርኬት ምስል እና ስም) */
+    /* Hero Section */
     .hero-section {
       position: relative;
       width: 100%;
@@ -51,12 +54,36 @@
       opacity: 0.9;
     }
 
+    /* Search Bar Component */
+    .search-container {
+      max-width: 600px;
+      margin: -25px auto 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+
     /* Categories Menu */
     .category-container {
       display: flex;
       justify-content: center;
       gap: 12px;
-      padding: 30px 5% 15px 5%;
+      padding: 25px 5% 15px 5%;
       flex-wrap: wrap;
     }
 
@@ -78,11 +105,12 @@
       box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
     }
 
-    /* Main Container & Grid */
+    /* Main Grid */
     main {
       padding: 20px 5% 50px 5%;
       max-width: 1200px;
       margin: 0 auto;
+      flex: 1;
     }
 
     .product-grid {
@@ -159,15 +187,63 @@
       font-size: 18px;
       color: #7f8c8d;
     }
+
+    /* Footer Design */
+    footer {
+      background-color: #1a252f;
+      color: #ecf0f1;
+      padding: 40px 5% 20px 5%;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .footer-section h3 {
+      font-size: 20px;
+      color: #28a745;
+      margin-bottom: 15px;
+    }
+
+    .footer-section p, .footer-section a {
+      color: #bdc3c7;
+      font-size: 15px;
+      text-decoration: none;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .footer-section a:hover {
+      color: #28a745;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 25px;
+      margin-top: 25px;
+      border-top: 1px solid #34495e;
+      font-size: 14px;
+      color: #7f8c8d;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Hero Section with Background Image and Large Title -->
+  <!-- Hero Section -->
   <header class="hero-section">
     <h1 class="hero-title">ALLMART <span>SUPERMARKET</span></h1>
     <p class="hero-subtitle">የሚፈልጉትን ማንኛውንም እቃ በጥራት እና በቅናሽ ያግኙ!</p>
   </header>
+
+  <!-- Search Bar Component -->
+  <div class="search-container">
+    <input type="text" id="search-input" class="search-input" placeholder="🔍 የእቃ ስም ጽፈው ይፈልጉ..." oninput="handleSearch()">
+  </div>
 
   <!-- Categories Navigation -->
   <div class="category-container">
@@ -183,11 +259,37 @@
     </div>
   </main>
 
-  <!-- JavaScript Code -->
+  <!-- Footer Section -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Allmart Supermarket</h3>
+        <p>ጥራት ያላቸውን የቤት ውስጥ እና የዕለት ተዕለት እቃዎች በታላቅ ቅናሽ የሚያገኙበት ታማኝ ሱፐርማርኬት።</p>
+      </div>
+      <div class="footer-section">
+        <h3>አድራሻችን</h3>
+        <p>📍 ጎንደር፣ ኢትዮጵያ</p>
+        <p>📞 ስልክ፦ +251 900 000 000</p>
+        <p>✉️ ኢሜይል፦ info@allmart.com</p>
+      </div>
+      <div class="footer-section">
+        <h3>ማህበራዊ ሚዲያ</h3>
+        <a href="https://t.me/" target="_blank">✈️ Telegram Channel</a>
+        <a href="#">Facebook Page</a>
+        <a href="#">TikTok Profile</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Allmart Supermarket. መብቱ በሕግ የተጠበቀ ነው።
+    </div>
+  </footer>
+
+  <!-- JavaScript Logic -->
   <script>
     const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
     let allProducts = [];
     let selectedCategory = 'all';
+    let searchQuery = '';
 
     async function fetchProducts() {
       const container = document.getElementById('product-list');
@@ -202,7 +304,6 @@
 
         let rawProducts = Array.isArray(data) ? data : Object.values(data);
         
-        // ባዶ የሆኑ (እውነተኛ ያልሆኑ) መረጃዎችን ማጣሪያ
         allProducts = rawProducts.filter(item => {
           return item && typeof item === 'object' && (item.name || item.price);
         });
@@ -219,22 +320,30 @@
       container.innerHTML = "";
 
       const filtered = allProducts.filter(item => {
-        if (selectedCategory === 'all') return true;
-        if (!item.category) return false;
-
-        const cat = item.category.trim().toLowerCase();
-        const selected = selectedCategory.trim().toLowerCase();
-
-        // cosmetics እና cosmotics ሁለቱንም እንዲቀበል ተደርጓል
-        if (selected === 'cosmetics' && (cat === 'cosmetics' || cat === 'cosmotics')) {
-          return true;
+        let matchesCategory = false;
+        if (selectedCategory === 'all') {
+          matchesCategory = true;
+        } else if (item.category) {
+          const cat = item.category.trim().toLowerCase();
+          const selected = selectedCategory.trim().toLowerCase();
+          if (selected === 'cosmetics' && (cat === 'cosmetics' || cat === 'cosmotics')) {
+            matchesCategory = true;
+          } else {
+            matchesCategory = cat === selected;
+          }
         }
 
-        return cat === selected;
+        let matchesSearch = true;
+        if (searchQuery) {
+          const name = item.name ? item.name.toLowerCase() : '';
+          matchesSearch = name.includes(searchQuery.toLowerCase());
+        }
+
+        return matchesCategory && matchesSearch;
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-text">በዚህ ካቴጎሪ ምንም እቃ አልተገኘም።</div>`;
+        container.innerHTML = `<div class="empty-text">ምንም የተፈለገ እቃ አልተገኘም።</div>`;
         return;
       }
 
@@ -257,6 +366,11 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value;
+      renderProducts();
     }
 
     function filterCategory(cat, element) {
