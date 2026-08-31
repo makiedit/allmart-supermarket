@@ -6,9 +6,21 @@
   <title>የባለቤት ማስተዳደሪያ (Admin Orders) - Allmart</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; padding: 20px; }
-    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
-    h2 { color: #1a252f; margin-bottom: 20px; border-left: 6px solid #28a745; padding-left: 12px; }
+    body { background-color: #f8f9fa; color: #333; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    
+    /* Login Box Styles */
+    #login-container { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
+    #login-container h2 { color: #1a252f; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+    input[type="password"] { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; outline: none; text-align: center; letter-spacing: 3px; }
+    .login-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .login-btn:hover { background: #218838; }
+    .error-msg { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
+
+    /* Admin Dashboard Styles */
+    .container { max-width: 1200px; width: 100%; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: none; }
+    .container h2 { color: #1a252f; margin-bottom: 20px; border-left: 6px solid #28a745; padding-left: 12px; }
     
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 14px; }
@@ -20,15 +32,35 @@
     .telebirr { background: #fff3cd; color: #856404; }
     .cash { background: #d4edda; color: #155724; }
     
-    .refresh-btn { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 15px; }
+    .top-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .refresh-btn { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     .refresh-btn:hover { background: #218838; }
+    .logout-btn { background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .logout-btn:hover { background: #c82333; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>የገቡ ትዕዛዞች ዝርዝር (Admin Dashboard)</h2>
-    <button class="refresh-btn" onclick="loadOrders()">🔄 ሪፖርት አድስ (Refresh)</button>
+  <!-- የይለፍ ቃል መጠየቂያ ፕላትፎርም -->
+  <div id="login-container">
+    <h2>የባለቤት መግቢያ</h2>
+    <p style="font-size: 13px; color: #666; margin-bottom: 20px;">እባክዎ የ 8 አሃዝ ምስጢራዊ ቁጥር ያስገቡ</p>
+    <div class="form-group">
+      <input type="password" id="adminPassword" maxlength="8" placeholder="********">
+    </div>
+    <button class="login-btn" onclick="checkPassword()">ግባ</button>
+    <p id="errorMsg" class="error-msg">የገባው የይለፍ ቃል ስህተት ነው!</p>
+  </div>
+
+  <!-- የትዕዛዞች ማስተዳደሪያ ሰንጠረዥ (በመጀመሪያ ተደብቋል) -->
+  <div class="container" id="adminDashboard">
+    <div class="top-actions">
+      <h2>የገቡ ትዕዛዞች ዝርዝር (Admin Dashboard)</h2>
+      <div>
+        <button class="refresh-btn" onclick="loadOrders()">🔄 አድስ</button>
+        <button class="logout-btn" onclick="logout()">ውጣ</button>
+      </div>
+    </div>
     
     <div style="overflow-x: auto;">
       <table>
@@ -53,6 +85,30 @@
 
   <script>
     const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
+    
+    // እዚህ ጋር የፈለጉትን የ 8 አሃዝ ቁጥር ማስቀመጥ ይችላሉ (ለምሳሌ: 12345678)
+    const CORRECT_PASSWORD = "12345678";
+
+    function checkPassword() {
+      const inputPass = document.getElementById('adminPassword').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (inputPass === CORRECT_PASSWORD) {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        loadOrders();
+      } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('adminPassword').value = '';
+      }
+    }
+
+    function logout() {
+      document.getElementById('adminDashboard').style.display = 'none';
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('errorMsg').style.display = 'none';
+    }
 
     async function loadOrders() {
       const tbody = document.getElementById('orders-table-body');
@@ -73,7 +129,7 @@
           const order = data[key];
           let paymentClass = 'cash';
           if (order.paymentMethod === 'CBE') paymentClass = 'cbe';
-          else if (order.paymentMethod === 'Telebirr') paymentClass.value = 'telebirr';
+          else if (order.paymentMethod === 'Telebirr') paymentClass = 'telebirr';
 
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -91,11 +147,9 @@
 
       } catch (error) {
         console.error("Error:", error);
-        tbody.innerHTML = "<tr><td colspan='8' style='text-align: center; color: red;'>ዳታውን ማምጣት አልተቻለም። (የኢንተርኔት ወይም የፋየርቤዝ ሕግ ችግር ሊሆን ይችላል)</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='8' style='text-align: center; color: red;'>ዳታውን ማምጣት አልተቻለም።</td></tr>";
       }
     }
-
-    loadOrders();
   </script>
 </body>
 </html>
