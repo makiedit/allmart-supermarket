@@ -14,6 +14,7 @@
     .summary-box { background: #f1f8f5; padding: 15px; border-radius: 8px; border: 1px solid #d4edda; margin-bottom: 20px; }
     .summary-box p { font-size: 15px; margin-bottom: 8px; }
     .summary-box span { font-weight: bold; color: #28a745; }
+    .total-price { font-size: 18px !important; color: #d9534f !important; border-top: 1px dashed #d4edda; padding-top: 8px; margin-top: 8px; }
 
     .form-group { margin-bottom: 15px; }
     label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #444; }
@@ -23,7 +24,6 @@
     .submit-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
     .submit-btn:hover { background: #218838; }
 
-    /* የክፍያ ዝርዝር መግለጫ */
     #payment-details { display: none; margin-top: 10px; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; font-size: 13px; color: #856404; }
   </style>
 </head>
@@ -34,10 +34,16 @@
     
     <div class="summary-box">
       <p>የተመረጠው እቃ: <span id="product-name">--</span></p>
-      <p>ቀጥተኛ ዋጋ: <span id="product-price">--</span> ብር</p>
+      <p>የአንዱ ዋጋ: <span id="unit-price">0</span> ብር</p>
+      <p class="total-price">ጠቅላላ የሚከፈለው: <span id="total-price">0</span> ብር</p>
     </div>
 
     <form id="orderForm">
+      <div class="form-group">
+        <label for="quantity">የእቃ ብዛት (Quantity)</label>
+        <input type="number" id="quantity" value="1" min="1" required oninput="calculateTotal()">
+      </div>
+
       <div class="form-group">
         <label for="fullName">ሙሉ ስምዎ</label>
         <input type="text" id="fullName" required placeholder="እባክዎ ስምዎን ያስገቡ">
@@ -63,7 +69,7 @@
         </select>
         
         <div id="payment-details">
-          <!-- እዚህ ላይ የባንክ ቁጥር ወይም መመሪያ ይጫናል -->
+          <!-- የክፍያ ዝርዝር መመሪያ እዚህ ይጫናል -->
         </div>
       </div>
 
@@ -72,14 +78,21 @@
   </div>
 
   <script>
-    // ከዩአርኤል (URL) የተላከውን የእቃ ስም እና ዋጋ መቀበል
     const urlParams = new URLSearchParams(window.location.search);
     const productName = urlParams.get('name');
-    const productPrice = urlParams.get('price');
+    const unitPrice = parseFloat(urlParams.get('price')) || 0;
 
-    if (productName && productPrice) {
+    if (productName && unitPrice) {
       document.getElementById('product-name').innerText = decodeURIComponent(productName);
-      document.getElementById('product-price').innerText = productPrice;
+      document.getElementById('unit-price').innerText = unitPrice;
+      document.getElementById('total-price').innerText = unitPrice;
+    }
+
+    // ብዛት ሲቀየር አጠቃላይ ዋጋውን በራሱ ማስያዣ
+    function calculateTotal() {
+      const qty = parseInt(document.getElementById('quantity').value) || 1;
+      const total = unitPrice * qty;
+      document.getElementById('total-price').innerText = total;
     }
 
     // የክፍያ አማራጭ ሲመረጥ ተጨማሪ መረጃ ማሳያ
@@ -102,7 +115,9 @@
     // ትዕዛዝ ሲላክ
     document.getElementById('orderForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      alert("ትዕዛዝዎ በተሳካ ሁኔታ ተቀብለናል! እናመሰግናለን።");
+      const qty = document.getElementById('quantity').value;
+      const total = document.getElementById('total-price').innerText;
+      alert(`ትዕዛዝዎ በተሳካ ሁኔታ ተቀብለናል!\nብዛት: ${qty}\nጠቅላላ ዋጋ: ${total} ብር\nእናመሰግናለን!`);
       window.location.href = "index.html";
     });
   </script>
