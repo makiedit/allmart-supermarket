@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Allmart</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #f1f5f9; color: #1e293b; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #0f172a; margin-bottom: 20px; text-align: center; }
+        
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .card h2 { color: #16a34a; margin-bottom: 15px; font-size: 1.3rem; }
+        
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+        
+        .btn-add { background: #16a34a; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; }
+        .btn-add:hover { background: #15803d; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
+        th { background: #f8fafc; color: #475569; }
+        .btn-delete { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .img-thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Allmart Admin Dashboard</h1>
+
+        <!-- እቃ መጫኛ ቅፅ -->
+        <div class="card">
+            <h2>➕ አዲስ እቃ መጫኛ (Add Product)</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>የእቃው ስም</label>
+                    <input type="text" id="prodName" required placeholder="ምሳሌ፦ Air Fryer 4.5L">
+                </div>
+                <div class="form-group">
+                    <label>ካቴጎሪ (Category)</label>
+                    <select id="prodCategory">
+                        <option value="food">ምግብ እና መጠጥ</option>
+                        <option value="cosmetics">ኮስሞቲክስና ውበት</option>
+                        <option value="appliances">የቤት መገልገያዎች</option>
+                        <option value="toys">የህፃናት መጫወቻዎች</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ንኡስ ካቴጎሪ (Subcategory - አማራጭ)</label>
+                    <input type="text" id="prodSubcategory" placeholder="ምሳሌ፦ oven, beverage... (ወይም all በለው)">
+                </div>
+                <div class="form-group">
+                    <label>ዋጋ (በብር)</label>
+                    <input type="number" id="prodPrice" required placeholder="8500">
+                </div>
+                <div class="form-group">
+                    <label>የምስል URL (Image Link)</label>
+                    <input type="url" id="prodImg" required placeholder="https://images.unsplash.com/...">
+                </div>
+                <button type="submit" class="btn-add">እቃውን መዝግብ</button>
+            </form>
+        </div>
+
+        <!-- የእቃዎች ዝርዝር መቆጣጠሪያ -->
+        <div class="card">
+            <h2>📦 የነበሩ እቃዎች ዝርዝር (Manage Products)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ምስል</th>
+                        <th>ስም</th>
+                        <th>ካቴጎሪ</th>
+                        <th>ዋጋ</th>
+                        <th>ተግባር</th>
+                    </tr>
+                </thead>
+                <tbody id="adminProductTable">
+                    <!-- እቃዎች እዚህ በ JS ይጫናሉ -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // YOUR FIREBASE CONFIGURATION HERE
+        const firebaseConfig = {
+    apiKey: "AIzaSyBVvJZ9VP-lOvzFPbwx_M57VzkLG6G_E0c",
+    authDomain: "allmart-shop-c5301.firebaseapp.com",
+    databaseURL: "https://allmart-shop-c5301-default-rtdb.firebaseio.com",
+    projectId: "allmart-shop-c5301",
+    storageBucket: "allmart-shop-c5301.firebasestorage.app",
+    messagingSenderId: "623247361737",
+    appId: "1:623247361737:web:64589886d52d79e81d2f18"
+  };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // እቃ መመዝገቢያ Form Event
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('prodName').value;
+            const category = document.getElementById('prodCategory').value;
+            const subcategory = document.getElementById('prodSubcategory').value || 'all';
+            const price = Number(document.getElementById('prodPrice').value);
+            const img = document.getElementById('prodImg').value;
+
+            // ወደ Firebase Database መላኪያ
+            const newProdRef = db.ref('products').push();
+            newProdRef.set({
+                id: newProdRef.key,
+                name: name,
+                category: category,
+                subcategory: subcategory,
+                price: price,
+                img: img
+            }).then(() => {
+                alert('እቃው በትክክል ተመዝግቧል!');
+                document.getElementById('addProductForm').reset();
+            });
+        });
+
+        // እቃዎችን ከ Database አውጥቶ በ Table ማሳያ
+        db.ref('products').on('value', (snapshot) => {
+            const tableBody = document.getElementById('adminProductTable');
+            tableBody.innerHTML = '';
+            const data = snapshot.val();
+
+            for (let id in data) {
+                const item = data[id];
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><img src="${item.img}" class="img-thumb"></td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td>${item.price.toLocaleString()} ብር</td>
+                        <td><button class="btn-delete" onclick="deleteProduct('${id}')">ሰርዝ</button></td>
+                    </tr>
+                `;
+            }
+        });
+
+        // እቃ መሰረዣ Function
+        function deleteProduct(id) {
+            if(confirm('እርግጠኛ ነዎት ይህ እቃ እንዲሰረዝ ይፈልጋሉ?')) {
+                db.ref('products/' + id).remove();
+            }
+        }
+    </script>
+</body>
+</html>
