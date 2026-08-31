@@ -3,193 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Allmart Supermarket</title>
+  <title>Allmart Supermarket - ዋና ገጽ</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; }
+    body { background-color: #f8f9fa; color: #333; padding: 20px; }
+    
+    header { text-align: center; margin-bottom: 25px; background: #1a252f; color: white; padding: 25px; border-radius: 10px; }
+    header h1 { font-size: 28px; margin-bottom: 5px; }
+    header p { font-size: 14px; color: #aaa; }
 
-    /* Top Navigation Bar */
-    .top-nav {
-      background: #1a252f;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 5%;
-    }
-    .top-nav .logo { font-size: 22px; font-weight: bold; color: #28a745; }
-    .nav-links { display: flex; gap: 20px; list-style: none; }
-    .nav-links a { color: white; text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.3s; }
-    .nav-links a:hover { color: #28a745; }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-    /* Header / Hero Section */
-    .hero {
-      min-height: 300px;
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=1200') center/cover;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 30px 20px;
-    }
-    .hero h1 { font-size: 38px; margin-bottom: 8px; font-weight: 800; }
-    .hero h1 span { color: #28a745; }
-    .hero p { font-size: 16px; max-width: 700px; line-height: 1.5; color: #ddd; }
+    /* የ ምድብ (Category) አዝራሮች ዲዛይን */
+    .category-filter { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+    .filter-btn { background: white; border: 2px solid #28a745; color: #28a745; padding: 8px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
+    .filter-btn:hover, .filter-btn.active { background: #28a745; color: white; }
 
-    /* Category Filter Buttons */
-    .filter-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 20px 5%;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    }
-    .filter-btn {
-      padding: 10px 20px;
-      background: #f1f8f5;
-      border: 1px solid #28a745;
-      color: #28a745;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: #28a745;
-      color: white;
-    }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    
+    .product-card { background: white; border: 1px solid #e1e4e8; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+    
+    .product-img { width: 100%; height: 160px; object-fit: cover; }
+    .product-info { padding: 15px; text-align: center; }
+    .product-name { font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #1a252f; }
+    .product-price { color: #d9534f; font-weight: bold; font-size: 16px; margin-bottom: 12px; }
+    
+    .buy-btn { background: #28a745; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; }
+    .buy-btn:hover { background: #218838; }
 
-    /* Products Section */
-    main { padding: 30px 5%; max-width: 1300px; margin: 0 auto; }
-    .section-title { font-size: 24px; margin-bottom: 20px; color: #1a252f; border-left: 5px solid #28a745; padding-left: 10px; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-    .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; transition: 0.3s; }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-card img { width: 100%; height: 180px; object-fit: cover; }
-    .card-body { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-    .p-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
-    .p-cat { font-size: 12px; color: #888; margin-bottom: 8px; }
-    .p-price { font-size: 18px; color: #28a745; font-weight: bold; margin-bottom: 12px; }
-    .order-btn { width: 100%; padding: 10px; background: #1a252f; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .order-btn:hover { background: #28a745; }
-
-    /* Footer */
-    footer { background: #1a252f; color: #ccc; text-align: center; padding: 25px; margin-top: 40px; font-size: 14px; }
+    .admin-link { display: block; text-align: center; margin-top: 40px; color: #666; font-size: 13px; text-decoration: none; }
+    .admin-link:hover { color: #28a745; }
   </style>
 </head>
 <body>
 
-  <!-- የላይኛው አሰሳ (Navigation Bar) ከስለ እኛ እና አድራሻ ማገናኛዎች ጋር -->
-  <nav class="top-nav">
-    <div class="logo">Allmart Supermarket</div>
-    <ul class="nav-links">
-      <li><a href="index.html">ዋና ገጽ</a></li>
-      <li><a href="about.html">ስለ እኛ</a></li>
-      <li><a href="location.html">አድራሻ</a></li>
-    </ul>
-  </nav>
+  <div class="container">
+    <header>
+      <h1>Allmart Supermarket</h1>
+      <p>ጥራት ያላቸው እቃዎች በአጭር ጊዜ ውስጥ ቤተሰዎ ዘንድ ይደርሳሉ</p>
+    </header>
 
-  <header class="hero">
-    <h1>ALLMART <span>SUPERMARKET</span></h1>
-    <p>የሚፈልጉትን የምግብ ዝርያዎች፣ የህፃናት መጫወቻዎች፣ ኮስሞቲክሶች እና የተመረጡ የስጦታ እቃዎችን በጥራት እና በቅናሽ ያግኙ!</p>
-  </header>
+    <!-- የምድብ (Category) ምርጫ አዝራሮች -->
+    <div class="category-filter">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">ሁሉም እቃዎች (All)</button>
+      <button class="filter-btn" onclick="filterProducts('cosmetics', this)">💄 ኮስሞቲክስ (Cosmetics)</button>
+      <button class="filter-btn" onclick="filterProducts('food', this)">🍎 የምግብ እቃዎች (Foods)</button>
+      <button class="filter-btn" onclick="filterProducts('household', this)">🧹 የቤት ውስጥ ማጽጃዎች (Household)</button>
+    </div>
 
-  <!-- የምድብ ማጣሪያ ቁልፎች -->
-  <div class="filter-container">
-    <button class="filter-btn active" onclick="filterCategory('ሁሉም', this)">ሁሉም እቃዎች</button>
-    <button class="filter-btn" onclick="filterCategory('ምግብና መጠጥ', this)">🍲 ምግብና መጠጥ</button>
-    <button class="filter-btn" onclick="filterCategory('የህፃናት መጫወቻ', this)">🧸 የህፃናት መጫወቻ</button>
-    <button class="filter-btn" onclick="filterCategory('ኮስሞቲክስ', this)">💄 ኮስሞቲክስ</button>
-    <button class="filter-btn" onclick="filterCategory('የስጦታ እቃዎች', this)">🎁 የስጦታ እቃዎች</button>
+    <div class="products-grid" id="product-list">
+      <!-- እቃዎች በጃቫስክሪፕት በራሳቸው እዚህ ይሞላሉ -->
+    </div>
+
+    <a href="admin.html" class="admin-link">⚙️ ለአስተዳዳሪ (Admin Panel) መግቢያ</a>
   </div>
 
-  <main>
-    <h2 class="section-title" id="list-title">ሁሉም እቃዎች</h2>
-    <div id="product-list" class="product-grid">
-      <!-- እቃዎች በ JavaScript ይጫናሉ -->
-    </div>
-  </main>
-
-  <footer>
-    <p>&copy; 2026 Allmart Supermarket. መብቱ በህግ የተጠበቀ ነው።</p>
-  </footer>
+  <!-- የዋጋ ማስተካከያ ፋይሉን መጥራት -->
+  <script src="products.js"></script>
 
   <script>
-    const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
-    
-    let allItems = [
-      { name: "የሱፍ ዘይት (5 ሊትር)", category: "ምግብና መጠጥ", price: 950, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
-      { name: "ዱቄት (በኪሎ/ኩንታል)", category: "ምግብና መጠጥ", price: 3200, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
-      { name: "ፓስታ እና ማካሮኒ", category: "ምግብና መጠጥ", price: 85, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500" },
-      { name: "የህፃናት መጫወቻ መኪና", category: "የህፃናት መጫወቻ", price: 650, image: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500" },
-      { name: "የህፃናት ዶል (Doll)", category: "የህፃናት መጫወቻ", price: 500, image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=500" },
-      { name: "የግንባታ መጫወቻ ብሎክ", category: "የህፃናት መጫወቻ", price: 1200, image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=500" },
-      { name: "የፊት ሜካፕ ሴት", category: "ኮስሞቲክስ", price: 1500, image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
-      { name: "ሻምፑ እና የጸጉር ቅባት", category: "ኮስሞቲክስ", price: 450, image: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?w=500" },
-      { name: "የሰውነት መዓዛ (Perfume)", category: "ኮስሞቲክስ", price: 900, image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500" },
-      { name: "ልዩ የስጦታ ቦርሳ", category: "የስጦታ እቃዎች", price: 350, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500" },
-      { name: "የሰዓት ስጦታ ፓኬጅ", category: "የስጦታ እቃዎች", price: 2500, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" },
-      { name: "የመጻሕፍት እና ቾኮሌት ስጦታ", category: "የስጦታ እቃዎች", price: 800, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500" }
-    ];
+    const container = document.getElementById('product-list');
 
-    async function loadProducts(selectedCategory = 'ሁሉም') {
-      const container = document.getElementById('product-list');
-      const titleElement = document.getElementById('list-title');
+    // እቃዎችን በገጹ ላይ የማሳያ ተግባር
+    function displayProducts(productsToDisplay) {
       container.innerHTML = "";
       
-      titleElement.innerText = selectedCategory === 'ሁሉም' ? 'ሁሉም እቃዎች' : selectedCategory;
-
-      let displayItems = allItems;
-
-      try {
-        const res = await fetch(`${DATABASE_URL}/products.json`);
-        const data = await res.json();
-        if (data) {
-          const firebaseItems = Object.values(data);
-          displayItems = [...firebaseItems, ...allItems];
-        }
-      } catch (e) {
-        console.log("Using default items");
-      }
-
-      if (selectedCategory !== 'ሁሉም') {
-        displayItems = displayItems.filter(item => item.category === selectedCategory);
-      }
-
-      if (displayItems.length === 0) {
-        container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777; padding: 20px;'> በዚህ ምድብ ውስጥ ምንም እቃዎች አልተገኙም።</p>";
+      if (productsToDisplay.length === 0) {
+        container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777;'> በዚህ ምድብ ስር ምንም እቃዎች የሉም።</p>";
         return;
       }
 
-      displayItems.forEach(item => {
+      productsToDisplay.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x200'">
-          <div class="card-body">
-            <div>
-              <div class="p-title">${item.name}</div>
-              <div class="p-cat">📁 ${item.category}</div>
-            </div>
-            <div>
-              <div class="p-price">${item.price} ብር</div>
-              <button class="order-btn" onclick="goToOrder('${encodeURIComponent(item.name)}', '${item.price}')">እዘዝ</button>
-            </div>
+          <img src="${product.image}" alt="${product.name}" class="product-img">
+          <div class="product-info">
+            <div class="product-name">${product.name}</div>
+            <div class="product-price">${product.price} ብር</div>
+            <a href="order.html?name=${encodeURIComponent(product.name)}&price=${product.price}" class="buy-btn">እዘዝ</a>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    function filterCategory(category, btnElement) {
+    // ምድብ ሲመረጥ እቃዎችን ማጣሪያ (Filter) የሚያደርግ ሎጂክ
+    function filterProducts(category, buttonElement) {
+      // የአዝራሮቹን active ስታይል ማስተካከል
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
-      loadProducts(category);
+      buttonElement.classList.add('active');
+
+      if (category === 'all') {
+        displayProducts(storeProducts);
+      } else {
+        const filtered = storeProducts.filter(p => p.category === category);
+        displayProducts(filtered);
+      }
     }
 
-    function goToOrder(name, price) {
-      window.location.href = `order.html?name=${name}&price=${price}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => loadProducts('ሁሉም'));
+    // ገጹ ሲከፈት የመጀመሪያውን (ሁሉም እቃዎች) ማሳየት
+    displayProducts(storeProducts);
   </script>
 </body>
 </html>
