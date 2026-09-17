@@ -219,23 +219,38 @@
         box.style.display = 'block';
       }
     }
-
-    function displayProducts(productsToDisplay) {
+function displayProducts(productsToDisplay) {
       const container = document.getElementById('product-list');
       container.innerHTML = "";
+      
       if (!productsToDisplay || productsToDisplay.length === 0) {
         container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777;'>ምንም የሚዛመድ እቃ አልተገኘም።</p>";
         return;
       }
 
-    function displayProducts(productsToDisplay) {
-      const container = document.getElementById('product-list');
-      container.innerHTML = "";
-      if (!productsToDisplay || productsToDisplay.length === 0) {
-        container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777;'>ምንም የሚዛመድ እቃ አልተገኘም።</p>";
-        return;
-      }
-
+      productsToDisplay.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        card.innerHTML = `
+          <div onclick="window.location.href='./detail.html?id=${product.id}'" style="cursor: pointer;">
+            <img src="${product.image}" alt="${product.name}" class="product-img">
+            <div class="product-info">
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">${product.price} ብር</div>
+              <div class="product-old-price">${product.oldPrice} ብር</div>
+            </div>
+          </div>
+          <div style="padding: 0 15px 15px 15px;">
+            <a href="./order.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}" class="buy-btn">እዘዝ</a>
+          </div>
+        `;
+        
+        // ይህቺ መስመር በጣም ወሳኝ ናት - ካርዱን ወደ ዌብሳይቱ እንዲጨምረው ታደርጋለች
+        container.appendChild(card);
+      });
+    }
+    
       productsToDisplay.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
