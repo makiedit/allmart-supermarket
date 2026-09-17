@@ -39,13 +39,17 @@
     .search-input { width: 100%; max-width: 500px; padding: 12px 15px; border: 2px solid #ddd; border-radius: 25px; font-size: 15px; outline: none; transition: 0.3s; }
     .search-input:focus { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.2); }
 
-    /* የምድብ ምስል ካርዶች ከነ ዋጋቸው */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .cat-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; padding-bottom: 10px; }
+    /* 4ቱም የምድብ ካርዶች በአንድ ረድፍ በትክክል እንዲሰፍሩ የተደረገ ዲዛይን */
+    .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
+    @media(max-width: 768px) {
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    .cat-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; padding-bottom: 8px; }
     .cat-card:hover, .cat-card.active { border-color: #28a745; transform: translateY(-3px); }
-    .cat-img { width: 100%; height: 110px; object-fit: cover; }
-    .cat-name { font-weight: bold; font-size: 15px; margin-top: 8px; color: #1a252f; }
-    .cat-price { font-size: 13px; color: #d9534f; font-weight: bold; margin-top: 3px; }
+    .cat-img { width: 100%; height: 95px; object-fit: cover; }
+    .cat-name { font-weight: bold; font-size: 14px; margin-top: 6px; color: #1a252f; }
+    .cat-price { font-size: 12px; color: #d9534f; font-weight: bold; margin-top: 2px; }
 
     /* About እና Address አዝራሮች */
     .nav-info-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
@@ -109,7 +113,7 @@
       <input type="text" id="searchInput" class="search-input" placeholder="🔍 የሚፈልጉትን እቃ ስም ይፈልጉ..." oninput="searchProducts()">
     </div>
 
-    <!-- የምድብ ምስል ካርዶች ከነ ዋጋቸው -->
+    <!-- 4ቱም የምድብ ምስል ካርዶች ከነ ዋጋቸው (ሁሉም፣ ኮስሞቲክስ፣ ምግብ፣ ማጽጃ) -->
     <div class="category-grid">
       <div class="cat-card active" onclick="filterProducts('all', this)">
         <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=300" alt="ሁሉም" class="cat-img">
@@ -187,7 +191,13 @@
     function showShop() {
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('shop-container').style.display = 'block';
-      displayProducts(storeProducts);
+      
+      // storeProducts መኖሩን አረጋግጦ እቃዎቹን እንዲጭን የተደረገ
+      if (typeof storeProducts !== 'undefined') {
+        displayProducts(storeProducts);
+      } else {
+        document.getElementById('product-list').innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>የእቃዎች ፋይል (products.js) አልተገኘም!</p>";
+      }
     }
 
     function handleLogout() {
@@ -210,12 +220,10 @@
       }
     }
 
-    const container = document.getElementById('product-list');
-    let currentCategory = 'all';
-
     function displayProducts(productsToDisplay) {
+      const container = document.getElementById('product-list');
       container.innerHTML = "";
-      if (productsToDisplay.length === 0) {
+      if (!productsToDisplay || productsToDisplay.length === 0) {
         container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777;'>ምንም የሚዛመድ እቃ አልተገኘም።</p>";
         return;
       }
