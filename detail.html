@@ -13,7 +13,6 @@
     .back-btn { display: inline-block; background: #6c757d; color: white; text-decoration: none; padding: 8px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; transition: 0.3s; }
     .back-btn:hover { background: #5a6268; }
 
-    /* የተመረጠው እቃ ዋና ማሳያ */
     .selected-product-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); display: flex; gap: 30px; align-items: center; margin-bottom: 40px; }
     @media(max-width: 768px) { .selected-product-box { flex-direction: column; text-align: center; } }
     
@@ -25,7 +24,6 @@
     .order-now-btn { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; }
     .order-now-btn:hover { background: #218838; }
 
-    /* Related Products Section */
     h3 { color: #1a252f; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
     
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
@@ -43,12 +41,10 @@
 <body>
 
   <div class="container">
-    <a href="index.html" class="back-btn">⬅️ ወደ ዋናው ሱቅ ተመለስ</a>
+    <a href="./index.html" class="back-btn">⬅️ ወደ ዋናው ሱቅ ተመለስ</a>
 
-    <!-- የተመረጠው እቃ እዚህ ይሞላል -->
     <div id="main-product-container"></div>
 
-    <!-- Related Products -->
     <h3>🔗 ሌሎች ተዛማጅ (Related) እቃዎች</h3>
     <div class="products-grid" id="related-products-list"></div>
   </div>
@@ -68,7 +64,6 @@
       const productId = parseInt(getQueryParam('id'));
       if (typeof storeProducts === 'undefined') return;
 
-      // የተስተካከሉ ዋጋዎችን ከ LocalStorage ማንበብ
       const savedPrices = JSON.parse(localStorage.getItem('allmart_custom_prices')) || {};
       
       const productsWithPrices = storeProducts.map(p => ({
@@ -76,7 +71,6 @@
         price: savedPrices[p.id] !== undefined ? savedPrices[p.id] : p.price
       }));
 
-      // የተጠቃሚው ጠቅ ያደረገው ዋና እቃ
       const currentProduct = productsWithPrices.find(p => p.id === productId);
 
       const mainContainer = document.getElementById('main-product-container');
@@ -87,7 +81,6 @@
         return;
       }
 
-      // 1. ዋናውን እቃ ማሳየት
       mainContainer.innerHTML = `
         <div class="selected-product-box">
           <img src="${currentProduct.image}" alt="${currentProduct.name}" class="selected-img">
@@ -95,12 +88,11 @@
             <h2>${currentProduct.name}</h2>
             <div class="selected-price">${currentProduct.price} ብር</div>
             <div class="selected-old-price">${currentProduct.oldPrice} ብር</div>
-            <a href="order.html?id=${currentProduct.id}&name=${encodeURIComponent(currentProduct.name)}&price=${currentProduct.price}" class="order-now-btn">አሁን እዘዝ</a>
+            <a href="./order.html?id=${currentProduct.id}&name=${encodeURIComponent(currentProduct.name)}&price=${currentProduct.price}" class="order-now-btn">አሁን እዘዝ</a>
           </div>
         </div>
       `;
 
-      // 2. Related (ተዛማጅ) እቃዎችን ማጣራት (በተለይ ከተመሳሳይ ምድብ [category] ግን ራሱን ያልያዘ)
       const relatedProducts = productsWithPrices.filter(p => 
         p.category === currentProduct.category && p.id !== currentProduct.id
       );
@@ -114,11 +106,14 @@
       relatedProducts.forEach(rel => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        card.onclick = function() {
+          window.location.href = `./detail.html?id=${rel.id}`;
+        };
         card.innerHTML = `
           <img src="${rel.image}" alt="${rel.name}" class="product-img">
           <div class="product-name">${rel.name}</div>
           <div class="product-price">${rel.price} ብር</div>
-          <a href="detail.html?id=${rel.id}" class="view-rel-btn">ይዩት</a>
+          <span class="view-rel-btn">ይዩት</span>
         `;
         relatedContainer.appendChild(card);
       });
