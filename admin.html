@@ -8,9 +8,21 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f6f9; color: #333; padding: 20px; }
     
-    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
     h1 { color: #1a252f; text-align: center; margin-bottom: 25px; font-size: 24px; }
     
+    /* የይለፍ ቃል መጠየቂያ ሳጥን (Password Screen) */
+    #password-screen { max-width: 400px; margin: 50px auto; text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    #password-screen h2 { margin-bottom: 15px; color: #1a252f; font-size: 20px; }
+    .pass-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; margin-bottom: 15px; outline: none; }
+    .pass-input:focus { border-color: #28a745; }
+    .login-btn { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .login-btn:hover { background: #218838; }
+    .error-msg { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
+
+    /* ዋናው የአስተዳዳሪ ገጽ (Dashboard) - መጀመሪያ ተደብቆ ይቆያል */
+    #admin-main-content { display: none; }
+
     /* የምርጫ ገጽ አዝራሮች (Choice Selection Screen) */
     #admin-choices { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
     .choice-btn { background: #1a252f; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
@@ -31,22 +43,41 @@
     .save-btn { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .save-btn:hover { background: #218838; }
 
+    .top-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .logout-admin-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; }
+    .logout-admin-btn:hover { background: #c82333; }
+
     .home-link { display: block; text-align: center; margin-top: 25px; color: #007bff; text-decoration: none; font-size: 14px; }
     .home-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>⚙️ Allmart - የአስተዳዳሪ መቆጣጠሪያ (Admin Panel)</h1>
+  <!-- 1. የይለፍ ቃል መጠየቂያ ማሳያ (Password Screen) -->
+  <div id="password-screen">
+    <h2>🔐 የአስተዳዳሪ መግቢያ ቃል</h2>
+    <form onsubmit="checkAdminPassword(event)">
+      <input type="password" id="adminPasswordInput" class="pass-input" placeholder="የይለፍ ቃል ያስገቡ..." required>
+      <button type="submit" class="login-btn">ግባ</button>
+      <p id="passErrorMsg" class="error-msg">የገባው የይለፍ ቃል ስህተት ነው!</p>
+    </form>
+    <a href="index.html" class="home-link" style="margin-top: 15px;">🏠 ወደ ሱቁ መግቢያ ገጽ ተመለስ</a>
+  </div>
 
-    <!-- 1. የመጀመሪያው ምርጫ መስጫ (Choice Screen) -->
+  <!-- 2. ትክክለኛውን ፓስወርድ ከገቡ በኋላ የሚከፈተው ዋናው የአስተዳዳሪ ገጽ -->
+  <div id="admin-main-content" class="container">
+    <div class="top-actions">
+      <h1>⚙️ Allmart - የአስተዳዳሪ መቆጣጠሪያ</h1>
+      <button class="logout-admin-btn" onclick="adminLogout()">ውጣ (Lock)</button>
+    </div>
+
+    <!-- የመጀመሪያው ምርጫ መስጫ (Choice Screen) -->
     <div id="admin-choices">
       <button class="choice-btn" onclick="showSection('orders-section')">📦 ትዕዛዞችን ማየት (View Orders)</button>
       <button class="choice-btn" onclick="showSection('products-section')">✏️ እቃዎችን እና ዋጋ ማደስ (Edit Products & Prices)</button>
     </div>
 
-    <!-- 2. የትዕዛዞች ማሳያ ክፍል -->
+    <!-- የትዕዛዞች ማሳያ ክፍል -->
     <div id="orders-section" class="admin-section">
       <button class="back-btn" onclick="goBackToChoices()">⬅️ ወደ ዋናው ምርጫ ተመለስ</button>
       <h2>ገቢ ትዕዛዞች</h2>
@@ -55,7 +86,7 @@
       </div>
     </div>
 
-    <!-- 3. የእቃዎች ዋጋ እና መረጃ ማስተካከያ ክፍል -->
+    <!-- የእቃዎች ዋጋ እና መረጃ ማስተካከያ ክፍል -->
     <div id="products-section" class="admin-section">
       <button class="back-btn" onclick="goBackToChoices()">⬅️ ወደ ዋናው ምርጫ ተመለስ</button>
       <h2>የእቃዎች ዋጋ ማስተካከያ</h2>
@@ -67,7 +98,7 @@
             <th>አሁን ያለበት ዋጋ (ብር)</th>
             <th>እርምጃ</th>
           </tr>
-        Ref</tr>
+        </thead>
         <tbody id="admin-products-table">
           <!-- በጃቫስክሪፕት የሚሞላ -->
         </tbody>
@@ -79,6 +110,39 @@
 
   <script src="products.js"></script>
   <script>
+    // የአስተዳዳሪ የይለፍ ቃል እዚህ ይስተካከላል (ማስተካከል ከፈለጉ "admin123" የሚለውን መቀየር ይችላሉ)
+    const ADMIN_SECRET_PASS = "admin123";
+
+    // ገጹ ሲከፈት ፓስወርዱን አስቀድሞ መግባቱን ማረጋገጥ
+    window.onload = function() {
+      if (localStorage.getItem('allmart_admin_logged') === 'true') {
+        showAdminDashboard();
+      }
+    };
+
+    // የይለፍ ቃል ማረጋገጫ
+    function checkAdminPassword(event) {
+      event.preventDefault();
+      const enteredPass = document.getElementById('adminPasswordInput').value;
+
+      if (enteredPass === ADMIN_SECRET_PASS) {
+        localStorage.setItem('allmart_admin_logged', 'true');
+        showAdminDashboard();
+      } else {
+        document.getElementById('passErrorMsg').style.display = 'block';
+      }
+    }
+
+    function showAdminDashboard() {
+      document.getElementById('password-screen').style.display = 'none';
+      document.getElementById('admin-main-content').style.display = 'block';
+    }
+
+    function adminLogout() {
+      localStorage.removeItem('allmart_admin_logged');
+      location.reload();
+    }
+
     // ምርጫዎችን መቀየሪያ ፋንክሽን
     function showSection(sectionId) {
       document.getElementById('admin-choices').style.display = 'none';
@@ -119,11 +183,9 @@
       });
     }
 
-    // ዋጋ ሲቀይሩ የሚቀመጥበት (ማስታወሻ፦ ከLocalStorage ጋር ተያይዞ እንዲቀመጥ ይደረጋል)
     function updatePrice(productId) {
       const newPrice = document.getElementById(`price-${productId}`).value;
       alert(`የእቃው ዋጋ በተሳካ ሁኔታ ወደ ${newPrice} ብር ተቀይሯል!`);
-      // ማስታወሻ: የ localStorage ማከማቻ እዚህ ላይ በመጨመር ዋጋውን ማስቀጠል ይቻላል።
     }
 
     // ትዕዛዞችን ከ LocalStorage ማንበቢያ
