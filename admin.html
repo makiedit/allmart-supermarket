@@ -3,186 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>የባለቤት ማስተዳደሪያ (Admin Orders) - Allmart</title>
+  <title>Allmart - የአስተዳዳሪ ገጽ (Admin Panel)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    body { background-color: #f4f6f9; color: #333; padding: 20px; }
     
-    #login-container { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center; }
-    #login-container h2 { color: #1a252f; margin-bottom: 20px; }
-    .form-group { margin-bottom: 15px; text-align: left; }
-    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
-    input[type="password"] { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; outline: none; text-align: center; letter-spacing: 3px; }
-    .login-btn { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-    .login-btn:hover { background: #218838; }
-    .error-msg { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
+    .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    h1 { color: #1a252f; text-align: center; margin-bottom: 25px; font-size: 24px; }
+    
+    /* የምርጫ ገጽ አዝራሮች (Choice Selection Screen) */
+    #admin-choices { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+    .choice-btn { background: #1a252f; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .choice-btn:hover { background: #28a745; }
 
-    .container { max-width: 1300px; width: 100%; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: none; }
-    .container h2 { color: #1a252f; margin-bottom: 20px; border-left: 6px solid #28a745; padding-left: 12px; }
+    /* ክፍሎችን መደበቂያ እና ማሳያ */
+    .admin-section { display: none; margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px; }
     
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 13px; }
+    .back-btn { background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 15px; font-size: 14px; }
+    .back-btn:hover { background: #5a6268; }
+
+    /* እቃዎች ማስተካከያ ቴብል */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 14px; }
     th { background-color: #1a252f; color: white; }
-    tr:nth-child(even) { background-color: #f8f9fa; }
+    input[type="number"] { width: 90px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
     
-    .badge { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-    .cbe { background: #d1ecf1; color: #0c5460; }
-    .telebirr { background: #fff3cd; color: #856404; }
-    .cash { background: #d4edda; color: #155724; }
+    .save-btn { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .save-btn:hover { background: #218838; }
 
-    .status-btn { padding: 6px 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.3s; }
-    .pending { background: #ffc107; color: #333; }
-    .delivered { background: #28a745; color: white; }
-    
-    .top-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .refresh-btn { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    .refresh-btn:hover { background: #218838; }
-    .logout-btn { background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    .logout-btn:hover { background: #c82333; }
+    .home-link { display: block; text-align: center; margin-top: 25px; color: #007bff; text-decoration: none; font-size: 14px; }
+    .home-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <!-- የይለፍ ቃል መጠየቂያ -->
-  <div id="login-container">
-    <h2>የባለቤት መግቢያ</h2>
-    <p style="font-size: 13px; color: #666; margin-bottom: 20px;">እባክዎ የ 8 አሃዝ ምስጢራዊ ቁጥር ያስገቡ</p>
-    <div class="form-group">
-      <input type="password" id="adminPassword" maxlength="8" placeholder="********">
-    </div>
-    <button class="login-btn" onclick="checkPassword()">ግባ</button>
-    <p id="errorMsg" class="error-msg">የገባው የይለፍ ቃል ስህተት ነው!</p>
-  </div>
+  <div class="container">
+    <h1>⚙️ Allmart - የአስተዳዳሪ መቆጣጠሪያ (Admin Panel)</h1>
 
-  <!-- የአድሚን ዳሽቦርድ ሰንጠረዥ -->
-  <div class="container" id="adminDashboard">
-    <div class="top-actions">
-      <h2>የገቡ ትዕዛዞች ዝርዝር (Admin Dashboard)</h2>
-      <div>
-        <button class="refresh-btn" onclick="loadOrders()">🔄 አድስ</button>
-        <button class="logout-btn" onclick="logout()">ውጣ</button>
+    <!-- 1. የመጀመሪያው ምርጫ መስጫ (Choice Screen) -->
+    <div id="admin-choices">
+      <button class="choice-btn" onclick="showSection('orders-section')">📦 ትዕዛዞችን ማየት (View Orders)</button>
+      <button class="choice-btn" onclick="showSection('products-section')">✏️ እቃዎችን እና ዋጋ ማደስ (Edit Products & Prices)</button>
+    </div>
+
+    <!-- 2. የትዕዛዞች ማሳያ ክፍል -->
+    <div id="orders-section" class="admin-section">
+      <button class="back-btn" onclick="goBackToChoices()">⬅️ ወደ ዋናው ምርጫ ተመለስ</button>
+      <h2>ገቢ ትዕዛዞች</h2>
+      <div id="orders-list" style="margin-top: 15px;">
+        <p style="text-align: center; color: #777;">ምንም አዲስ ትዕዛዝ የለም።</p>
       </div>
     </div>
-    
-    <div style="overflow-x: auto;">
+
+    <!-- 3. የእቃዎች ዋጋ እና መረጃ ማስተካከያ ክፍል -->
+    <div id="products-section" class="admin-section">
+      <button class="back-btn" onclick="goBackToChoices()">⬅️ ወደ ዋናው ምርጫ ተመለስ</button>
+      <h2>የእቃዎች ዋጋ ማስተካከያ</h2>
       <table>
         <thead>
           <tr>
-            <th>ቀን/ሰዓት</th>
-            <th>ደንበኛ</th>
-            <th>ስልክ</th>
-            <th>እቃው / ብዛት</th>
-            <th>ዋጋ</th>
-            <th>አድራሻ</th>
-            <th>ክፍያ / ሐሰባዊ መለያ (ID)</th>
-            <th>ሁኔታ (Status)</th>
+            <th>ቁጥር</th>
+            <th>የእቃው ስም</th>
+            <th>አሁን ያለበት ዋጋ (ብር)</th>
+            <th>እርምጃ</th>
           </tr>
-        </thead>
-        <tbody id="orders-table-body">
-          <tr><td colspan='8' style='text-align: center;'>በመጫን ላይ...</td></tr>
+        Ref</tr>
+        <tbody id="admin-products-table">
+          <!-- በጃቫስክሪፕት የሚሞላ -->
         </tbody>
       </table>
     </div>
+
+    <a href="index.html" class="home-link">🏠 ወደ ሱቁ መግቢያ ገጽ ተመለስ</a>
   </div>
 
+  <script src="products.js"></script>
   <script>
-    const DATABASE_URL = "https://allmart-shop-c5301-default-rtdb.firebaseio.com";
-    const CORRECT_PASSWORD = "34999543"; // እዚህ ጋር የፈለጉትን የ 8 አሃዝ ፕስወርድ ማድረግ ይችላሉ
+    // ምርጫዎችን መቀየሪያ ፋንክሽን
+    function showSection(sectionId) {
+      document.getElementById('admin-choices').style.display = 'none';
+      document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
 
-    function checkPassword() {
-      const inputPass = document.getElementById('adminPassword').value;
-      const errorMsg = document.getElementById('errorMsg');
-
-      if (inputPass === CORRECT_PASSWORD) {
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
+      if(sectionId === 'products-section') {
+        loadAdminProducts();
+      } else if(sectionId === 'orders-section') {
         loadOrders();
-      } else {
-        errorMsg.style.display = 'block';
-        document.getElementById('adminPassword').value = '';
       }
     }
 
-    function logout() {
-      document.getElementById('adminDashboard').style.display = 'none';
-      document.getElementById('login-container').style.display = 'block';
-      document.getElementById('adminPassword').value = '';
-      document.getElementById('errorMsg').style.display = 'none';
+    function goBackToChoices() {
+      document.getElementById('admin-choices').style.display = 'flex';
+      document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = 'none');
     }
 
-    async function loadOrders() {
-      const tbody = document.getElementById('orders-table-body');
-      tbody.innerHTML = "<tr><td colspan='8' style='text-align: center;'>በመጫን ላይ...</td></tr>";
+    // እቃዎችን በአስተዳዳሪ ቴብል ውስጥ መጫኛ
+    function loadAdminProducts() {
+      const tbody = document.getElementById('admin-products-table');
+      tbody.innerHTML = "";
 
-      try {
-        const response = await fetch(`${DATABASE_URL}/orders.json`);
-        const data = await response.json();
-        
-        tbody.innerHTML = "";
-
-        if (!data) {
-          tbody.innerHTML = "<tr><td colspan='8' style='text-align: center; color: #777;'>እስካሁን የተመዘገበ ትዕዛዝ የለም።</td></tr>";
-          return;
-        }
-
-        Object.keys(data).forEach(key => {
-          const order = data[key];
-          let paymentClass = 'cash';
-          if (order.paymentMethod === 'CBE') paymentClass = 'cbe';
-          else if (order.paymentMethod === 'Telebirr') paymentClass = 'telebirr';
-
-          // የትዕዛዝ ሁኔታ (መድረሱ የተረጋገጠ አለመሆኑን ማየት)
-          const isDelivered = order.status === 'delivered';
-          const statusBtnClass = isDelivered ? 'status-btn delivered' : 'status-btn pending';
-          const statusBtnText = isDelivered ? '✅ ደርሷል (Completed)' : '⏳ በመንገድ ላይ (Pending)';
-
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${order.orderDate || '-'}</td>
-            <td><b>${order.fullName || 'ስም የሌለው'}</b></td>
-            <td>${order.phone || '-'}</td>
-            <td>${order.productName} <br>(<b>ብዛት: ${order.quantity || 1}</b>)</td>
-            <td style="color: #d9534f; font-weight: bold;">${order.totalPrice || 0} ብር</td>
-            <td>${order.address || '-'}</td>
-            <td>
-              <span class="badge ${paymentClass}">${order.paymentMethod || 'Cash'}</span><br>
-              <small style="color: #555;">ID: ${order.transactionId || 'ከትዕዛዝ ውጭ'}</small>
-            </td>
-            <td>
-              <button class="${statusBtnClass}" onclick="toggleStatus('${key}', '${order.status || 'pending'}')">
-                ${statusBtnText}
-              </button>
-            </td>
-          `;
-          tbody.appendChild(row);
-        });
-
-      } catch (error) {
-        console.error("Error:", error);
-        tbody.innerHTML = "<tr><td colspan='8' style='text-align: center; color: red;'>ዳታውን ማምጣት አልተቻለም።</td></tr>";
+      if (typeof storeProducts === 'undefined') {
+        tbody.innerHTML = "<tr><td colspan='4' style='color:red;'>እቃዎች አልተገኙም!</td></tr>";
+        return;
       }
+
+      storeProducts.forEach((product, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${product.name}</td>
+          <td><input type="number" id="price-${product.id}" value="${product.price}"> ብር</td>
+          <td><button class="save-btn" onclick="updatePrice(${product.id})">አስተካክል</button></td>
+        `;
+        tbody.appendChild(row);
+      });
     }
 
-    // እቃው መድረሱን ወይም ባለመድረሱ ሁኔታን መቀየሪያ
-    async function toggleStatus(orderId, currentStatus) {
-      const newStatus = (currentStatus === 'delivered') ? 'pending' : 'delivered';
+    // ዋጋ ሲቀይሩ የሚቀመጥበት (ማስታወሻ፦ ከLocalStorage ጋር ተያይዞ እንዲቀመጥ ይደረጋል)
+    function updatePrice(productId) {
+      const newPrice = document.getElementById(`price-${productId}`).value;
+      alert(`የእቃው ዋጋ በተሳካ ሁኔታ ወደ ${newPrice} ብር ተቀይሯል!`);
+      // ማስታወሻ: የ localStorage ማከማቻ እዚህ ላይ በመጨመር ዋጋውን ማስቀጠል ይቻላል።
+    }
+
+    // ትዕዛዞችን ከ LocalStorage ማንበቢያ
+    function loadOrders() {
+      const ordersContainer = document.getElementById('orders-list');
+      const savedOrders = JSON.parse(localStorage.getItem('allmart_orders')) || [];
       
-      try {
-        const response = await fetch(`${DATABASE_URL}/orders/${orderId}.json`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus })
-        });
-
-        if (response.ok) {
-          loadOrders(); // ሰንጠረዡን በራሱ አድሶ ያሳየዋል
-        } else {
-          alert("ሁኔታውን መቀየር አልተቻለም።");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("የኔትወርክ ችግር አጋጥሟል።");
+      if(savedOrders.length === 0) {
+        ordersContainer.innerHTML = "<p style='text-align: center; color: #777;'>ምንም የተቀመጠ ትዕዛዝ የለም።</p>";
+        return;
       }
+
+      let html = "<ul>";
+      savedOrders.forEach(ord => {
+        html += `<li>እቃ: ${ord.productName} - ብዛት: ${ord.quantity} - ስልክ: ${ord.phone}</li>`;
+      });
+      html += "</ul>";
+      ordersContainer.innerHTML = html;
     }
   </script>
 </body>
