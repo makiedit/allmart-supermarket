@@ -1,6 +1,6 @@
 const storeProducts = [
   // 🍎 የምግብ እቃዎች (Foods) - 10 እቃዎች
-  { id: 1, name: "ፓስታ (Pasta)", price: 90, oldPrice: 110, category: "food", image: "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?w=300" },
+  { id: 1, name: "ፓስታ (Pasta)", price: 100, oldPrice: 110, category: "food", image: "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?w=300" },
   { id: 2, name: "ማካሮኒ (Macaroni)", price: 85, oldPrice: 100, category: "food", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=300" },
   { id: 3, name: "ፉርኖ ዱቄት (Flour) 1kg", price: 95, oldPrice: 120, category: "food", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300" },
   { id: 4, name: "የምግብ ዘይት (Cooking Oil) 1L", price: 250, oldPrice: 280, category: "food", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300" },
