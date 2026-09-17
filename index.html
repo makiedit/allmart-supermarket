@@ -228,20 +228,34 @@
         return;
       }
 
+    function displayProducts(productsToDisplay) {
+      const container = document.getElementById('product-list');
+      container.innerHTML = "";
+      if (!productsToDisplay || productsToDisplay.length === 0) {
+        container.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: #777;'>ምንም የሚዛመድ እቃ አልተገኘም።</p>";
+        return;
+      }
+
       productsToDisplay.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        // እቃውን ሲነኩ ወደ detail.html ገጽ በ id ይወስደዋል
+        card.onclick = function() {
+          window.location.href = `detail.html?id=${product.id}`;
+        };
+        
         card.innerHTML = `
           <img src="${product.image}" alt="${product.name}" class="product-img">
           <div class="product-info">
             <div class="product-name">${product.name}</div>
             <div class="product-price">${product.price} ብር</div>
             <div class="product-old-price">${product.oldPrice} ብር</div>
-            <a href="order.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}" class="buy-btn">እዘዝ</a>
+            <span class="buy-btn" onclick="event.stopPropagation(); window.location.href='order.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}'">እዘዝ</span>
           </div>
         `;
         container.appendChild(card);
       });
+    }
     }
 
     function filterProducts(category, cardElement) {
