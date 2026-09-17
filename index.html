@@ -8,7 +8,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f8f9fa; color: #333; padding: 20px; }
     
-    /* 1. የሎጊን ገጽ ዲዛይን */
     #login-container { max-width: 400px; margin: 80px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); text-align: center; }
     #login-container h2 { color: #1a252f; margin-bottom: 20px; font-size: 24px; }
     .login-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; border-radius: 50%; background: #f1f4f6; padding: 5px; }
@@ -22,7 +21,6 @@
     .login-btn:hover { background: #218838; }
     .error-msg { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
 
-    /* 2. ዋናው የሱቅ ገጽ */
     #shop-container { display: none; max-width: 1200px; margin: 0 auto; }
     
     header { text-align: center; margin-bottom: 25px; background: #1a252f; color: white; padding: 30px; border-radius: 12px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -39,19 +37,17 @@
     .search-input { width: 100%; max-width: 500px; padding: 12px 15px; border: 2px solid #ddd; border-radius: 25px; font-size: 15px; outline: none; transition: 0.3s; }
     .search-input:focus { border-color: #28a745; box-shadow: 0 0 8px rgba(40,167,69,0.2); }
 
-    /* 4ቱም የምድብ ካርዶች በአንድ ረድፍ በትክክል እንዲሰፍሩ የተደረገ ዲዛይን */
-    .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
+    .category-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
     @media(max-width: 768px) {
       .category-grid { grid-template-columns: repeat(2, 1fr); }
     }
     
-    .cat-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; padding-bottom: 8px; }
+    .cat-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; padding-bottom: 8px; text-decoration: none; display: block; color: inherit; }
     .cat-card:hover, .cat-card.active { border-color: #28a745; transform: translateY(-3px); }
     .cat-img { width: 100%; height: 95px; object-fit: cover; }
     .cat-name { font-weight: bold; font-size: 14px; margin-top: 6px; color: #1a252f; }
     .cat-price { font-size: 12px; color: #d9534f; font-weight: bold; margin-top: 2px; }
 
-    /* About እና Address አዝራሮች */
     .nav-info-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
     .info-toggle-btn { background: #1a252f; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; cursor: pointer; transition: 0.3s; }
     .info-toggle-btn:hover { background: #28a745; }
@@ -70,7 +66,7 @@
     .product-price { color: #d9534f; font-weight: bold; font-size: 16px; margin-bottom: 4px; }
     .product-old-price { color: #999; text-decoration: line-through; font-size: 13px; margin-bottom: 12px; }
     
-    .buy-btn { background: #28a745; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; }
+    .buy-btn { background: #28a745; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; text-align: center; }
     .buy-btn:hover { background: #218838; }
 
     .admin-link { display: block; text-align: center; margin-top: 30px; color: #666; font-size: 13px; text-decoration: none; }
@@ -79,7 +75,6 @@
 </head>
 <body>
 
-  <!-- 1. የመግቢያ (Login) ገጽ ክፍል -->
   <div id="login-container">
     <img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=150" alt="Logo" class="login-logo">
     <h2>ወደ Allmart Supermarket ይግቡ</h2>
@@ -97,7 +92,6 @@
     </form>
   </div>
 
-  <!-- 2. ዋናው የሱቅ ገጽ -->
   <div id="shop-container" class="container">
     <header>
       <div class="top-links">
@@ -108,18 +102,23 @@
       <p>ጥራት ያላቸው እቃዎች በአጭር ጊዜ ውስጥ ቤተሰዎ ዘንድ ይደርሳሉ</p>
     </header>
 
-    <!-- የፍለጋ አሞሌ -->
     <div class="search-bar-container">
       <input type="text" id="searchInput" class="search-input" placeholder="🔍 የሚፈልጉትን እቃ ስም ይፈልጉ..." oninput="searchProducts()">
     </div>
 
-    <!-- 4ቱም የምድብ ምስል ካርዶች ከነ ዋጋቸው (ሁሉም፣ ኮስሞቲክስ፣ ምግብ፣ ማጽጃ) -->
     <div class="category-grid">
       <div class="cat-card active" onclick="filterProducts('all', this)">
         <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=300" alt="ሁሉም" class="cat-img">
         <div class="cat-name">ሁሉም እቃዎች</div>
         <div class="cat-price">ከተለያዩ ዋጋዎች ጋር</div>
       </div>
+      
+      <a href="./pasta.html" class="cat-card">
+        <img src="https://images.unsplash.com/photo-1621996346565-e3d5d6281297?w=300" alt="ፓስታ" class="cat-img">
+        <div class="cat-name">🍝 ፓስታ ምርቶች</div>
+        <div class="cat-price">ተዛማጅ ዋጋዎች</div>
+      </a>
+
       <div class="cat-card" onclick="filterProducts('cosmetics', this)">
         <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=300" alt="ኮስሞቲክስ" class="cat-img">
         <div class="cat-name">💄 ኮስሞቲክስ</div>
@@ -137,19 +136,16 @@
       </div>
     </div>
 
-    <!-- About እና Address አዝራሮች -->
     <div class="nav-info-buttons">
       <button class="info-toggle-btn" onclick="toggleInfo('aboutBox')">ℹ️ ስለ ኛ (About)</button>
       <button class="info-toggle-btn" onclick="toggleInfo('addressBox')">📍 አድራሻችን (Address)</button>
     </div>
 
-    <!-- ስለ ኛ መረጃ ሳጥን -->
     <div id="aboutBox" class="info-box-modal">
       <h3>ስለ Allmart Supermarket</h3>
       <p>Allmart Supermarket የተሟሉ የቤት ውስጥ እቃዎችን፣ የምግብ ምርቶችን እና የኮስሞቲክስ እቃዎችን በተመጣጣኝ ዋጋ ለህብረተሰቡ የሚያቀርብ ዘመናዊ ኦንላይን ሱቅ ነው። ጥራት እና ፈጣን አገልግሎት መለያችን ናቸው።</p>
     </div>
 
-    <!-- አድራሻ መረጃ ሳጥን -->
     <div id="addressBox" class="info-box-modal">
       <h3>አድራሻችን እና ርክክብ</h3>
       <ul>
@@ -160,10 +156,9 @@
       </ul>
     </div>
 
-    <!-- የእቃዎች ዝርዝር ማሳያ -->
     <div class="products-grid" id="product-list"></div>
 
-    
+    <a href="admin.html" class="admin-link">⚙️ ለአስተዳዳሪ (Admin Panel) መግቢያ</a>
   </div>
 
   <script src="products.js"></script>
@@ -188,16 +183,24 @@
       }
     }
 
+    function getActiveProducts() {
+      if (typeof storeProducts === 'undefined') return [];
+      const savedPrices = JSON.parse(localStorage.getItem('allmart_custom_prices')) || {};
+      
+      return storeProducts.map(product => {
+        return {
+          ...product,
+          price: savedPrices[product.id] !== undefined ? savedPrices[product.id] : product.price
+        };
+      });
+    }
+
     function showShop() {
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('shop-container').style.display = 'block';
       
-      // storeProducts መኖሩን አረጋግጦ እቃዎቹን እንዲጭን የተደረገ
-      if (typeof storeProducts !== 'undefined') {
-        displayProducts(storeProducts);
-      } else {
-        document.getElementById('product-list').innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: red;'>የእቃዎች ፋይል (products.js) አልተገኘም!</p>";
-      }
+      const activeProducts = getActiveProducts();
+      displayProducts(activeProducts);
     }
 
     function handleLogout() {
@@ -219,7 +222,10 @@
         box.style.display = 'block';
       }
     }
-function displayProducts(productsToDisplay) {
+
+    let currentCategory = 'all';
+
+    function displayProducts(productsToDisplay) {
       const container = document.getElementById('product-list');
       container.innerHTML = "";
       
@@ -245,51 +251,31 @@ function displayProducts(productsToDisplay) {
             <a href="./order.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}" class="buy-btn">እዘዝ</a>
           </div>
         `;
-        
-        // ይህቺ መስመር በጣም ወሳኝ ናት - ካርዱን ወደ ዌብሳይቱ እንዲጨምረው ታደርጋለች
         container.appendChild(card);
       });
-    }
-    
-      productsToDisplay.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        // እቃውን ሲነኩ ወደ detail.html ገጽ በ id ይወስደዋል
-        card.onclick = function() {
-          window.location.href = `detail.html?id=${product.id}`;
-        };
-        
-        card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" class="product-img">
-          <div class="product-info">
-            <div class="product-name">${product.name}</div>
-            <div class="product-price">${product.price} ብር</div>
-            <div class="product-old-price">${product.oldPrice} ብር</div>
-            <span class="buy-btn" onclick="event.stopPropagation(); window.location.href='order.html?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}'">እዘዝ</span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
     }
 
     function filterProducts(category, cardElement) {
       currentCategory = category;
-      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.cat-card').forEach(c => {
+        if(!c.href) c.classList.remove('active');
+      });
       cardElement.classList.add('active');
       document.getElementById('searchInput').value = ""; 
 
+      const activeProducts = getActiveProducts();
       if (category === 'all') {
-        displayProducts(storeProducts);
+        displayProducts(activeProducts);
       } else {
-        const filtered = storeProducts.filter(p => p.category === category);
+        const filtered = activeProducts.filter(p => p.category === category);
         displayProducts(filtered);
       }
     }
 
     function searchProducts() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
-      let baseList = currentCategory === 'all' ? storeProducts : storeProducts.filter(p => p.category === currentCategory);
+      const activeProducts = getActiveProducts();
+      let baseList = currentCategory === 'all' ? activeProducts : activeProducts.filter(p => p.category === currentCategory);
       const searched = baseList.filter(p => p.name.toLowerCase().includes(query));
       displayProducts(searched);
     }
